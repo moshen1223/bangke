@@ -1,0 +1,253 @@
+<template>
+<div class="help-detail">
+    <div class="seek-content">
+        <div class="seek-user">
+            <div class="user-head">
+                <div></div>
+            </div>
+            <div class="user-info">
+                <h5>隔壁老王</h5>
+                <div><span>11-17 23:47</span><b>河南师范大学</b></div>
+            </div>
+        </div>
+        <p class="seek-disc">
+            马上要四级考试了，英语学不好，怎么办？有没有英语方面的大神带带，
+            求助，有下图奖励哦~
+        </p>
+        <div class="award">
+            <img src="./award.png">
+        </div>
+        <div class="issue">
+            <h4>互助内容：英语四级考试学士方式。</h4>
+            <p>如果你是大神，你就来，共同提高！</p>
+        </div>
+    </div>
+    <h3 class="answer-title">精彩回答</h3>
+    <div class="answer-list">
+        <ul>
+            <li>
+                <div class="replay-header">
+                    <div></div>
+                </div>
+                <div class="replay-content">
+                    <h5>老王</h5>
+                    <p>来啊，联系我（64a6df6s4），保你考424，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈hhhhhh</p>
+                    <div class="replay-status">
+                        <i class="accepted"></i><span>2017/11/17</span>
+                    </div>
+                    <strong class="replay-sign"></strong>
+                </div>
+            </li>
+            <li>
+                <div class="replay-header">
+                    <div></div>
+                </div>
+                <div class="replay-content">
+                    <h5>老王</h5>
+                    <p>来啊，联系我（64a6df6s4），保你考424，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈hhhhhh</p>
+                    <div class="replay-status">
+                        <i></i><span>2017/11/17</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="submit">
+        <div class="left">
+            <input type="text" v-model="answer" placeholder="请输入回答"/>
+        </div>
+        <div class="right">
+            <span>提交</span>
+        </div>
+    </div>
+</div>
+</template>
+<script>
+    export default{
+        data(){
+            return {
+                answer: ''
+            }
+        },
+        computed: {
+        },
+        mounted(){
+        },
+        methods: {
+        },
+        components: {
+
+        }
+    }
+</script>
+<style lang="stylus" rel="stylesheet/stylus">
+.help-detail
+    width: 100%
+    height: 100%
+    background: #f1efed 
+    letter-spacing: 1px
+    padding-top: 8px
+    .seek-content
+        padding: 7px 11px
+        background: #fff
+        .seek-user
+            display: flex
+            .user-head
+                flex: 0 0 32px
+                div
+                    width: 32px
+                    height: 32px
+                    border-radius: 2px
+                    background: #fc5459
+                    overflow: hidden
+            .user-info
+                padding-left: 8px
+                -webkit-box-sizing: border-box
+                -moz-box-sizing: border-box
+                -o-box-sizing: border-box
+                box-sizing: border-box
+                flex: 1
+                h5
+                    font-size: 14px
+                    color: #87807f
+                    font-weight: bold
+                    margin-top: 2px
+                div
+                    font-size: 12px
+                    color: #87807f
+                    margin-top: 4px
+        .seek-disc
+            margin-top: 6px
+            line-height: 18px
+            font-size: 13px
+            color: #fc5459
+            font-weight: bold
+        .award
+            width: 100%
+            margin-top: 6px
+            overflow: hidden
+            img
+                width: 100%
+                height: auto
+        .issue
+            background: #f5f5f5
+            margin-top: -1px
+            padding: 12px 14px 10px 14px
+            -webkit-box-sizing: border-box
+            -moz-box-sizing: border-box
+            -o-box-sizing: border-box
+            box-sizing: border-box
+            h4
+                font-size: 14px 
+                color: #333
+                font-weight: bold
+            p
+                font-size: 12px
+                color: #87807f
+                line-height: 20px
+                margin-top: 5px
+    .answer-title
+        height: 30px
+        padding-left: 11px
+        font-size: 14px
+        color: #87807f
+        line-height: 30px
+    .answer-list
+        padding: 0 11px 48px 11px
+        background: #fff
+        ul
+            li
+                display: flex
+                padding-top: 14px
+                .replay-header
+                    flex: 0 0 32px
+                    div
+                        width: 32px
+                        height: 32px
+                        border-radius: 2px
+                        overflow: hidden
+                        background: #f90
+                .replay-content
+                    position: relative
+                    padding: 1px 12px 12px 9px
+                    -webkit-box-sizing: border-box
+                    -moz-box-sizing: border-box
+                    -o-box-sizing: border-box
+                    box-sizing: border-box
+                    border-bottom: 1px solid #d2d2d2
+                    h5
+                        font-size: 14px
+                        color: #333
+                        font-weight: bold
+                    p
+                        font-size: 12px
+                        color: #333
+                        line-height: 18px
+                        margin-top: 5px
+                    .replay-status
+                        margin-top: 8px
+                        i
+                            display: inline-block
+                            vertical-align: middle
+                            width: 56px
+                            height: 12px
+                            background: url('./no-accept-text.png') no-repeat
+                            background-size: 56px 12px
+                        span
+                            font-size: 10px
+                            color: #87807f
+                            margin-left: 25px
+                            display: inline-block
+                            vertical-align: middle 
+                        .accepted
+                            width: 36px
+                            height: 12px
+                            background: url('./accept-text.png') no-repeat
+                            background-size: 36px 12px
+                    .replay-sign
+                        width: 57px
+                        height: 56px
+                        background: url('./accept.png') no-repeat
+                        background-size: 57px 56px
+                        position: absolute
+                        top: 8px
+                        right: 14px
+    .submit
+        display: flex
+        background: #fff
+        position: fixed
+        bottom: 0
+        width: 100%
+        padding: 8px 11px
+        border-top: 1px solid #d2d2d2
+        -webkit-box-sizing: border-box
+        -moz-box-sizing: border-box
+        -o-box-sizing: border-box
+        box-sizing: border-box
+        .left
+            flex: 1
+            input
+                outline:none
+                border-radius: 2px
+                background: #eee
+                font-size: 12px
+                color: #87807f
+                padding-left: 11px
+                width: 100%
+                height: 32px
+                border-top: 1px solid #d2d2d2
+                -webkit-box-sizing: border-box
+                -moz-box-sizing: border-box
+                -o-box-sizing: border-box
+                box-sizing: border-box
+        .right
+            flex: 0 0 80px
+            span
+                display: inline-block
+                width: 100%
+                height: 32px
+                line-height: 32px
+                text-align: center
+                font-size: 15px
+                color: #333
+</style>

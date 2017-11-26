@@ -1,0 +1,3 @@
+export const SET_COMPLETEPAGE = 'SET_COMPLETEPAGE';
+export const SET_USERINFO = 'SET_USERINFO';
+
