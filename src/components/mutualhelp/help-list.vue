@@ -13,8 +13,8 @@
     <div class="status">
         <div class="select-type">已选："已完成状态" "奖励类型"</div>
         <div class="select-btn">
-            <div><b>状态：</b><span>未完成</span><span class="selected">已完成</span></div>
-            <div><b>类型：</b><span>奖励</span><span class="selected">赚取</span></div>
+            <div><b>状态：</b><span>全部</span><span>未完成</span><span class="selected">已完成</span></div>
+            <div><b>类型：</b><span>全部</span><span>奖励</span><span class="selected">赚取</span></div>
         </div>
     </div>
     <div class="list">
@@ -62,27 +62,54 @@
 </div>
 </template>
 <script>
-    export default{
-        data(){
-            return {
-                maskShow: false
-            }
-        },
-        computed: {
-        },
-        mounted(){
-        },
-        methods: {
-            selectItem(id){
-                this.$router.push({
-                    path: `/help-list/${id}`
-                })
-            }
-        },
-        components: {
+import storage from 'good-storage';
+import API from 'api/api';
+const querystring = require('querystring');
+import {mapGetters} from 'vuex';
 
+export default{
+    data(){
+        return {
+            maskShow: false
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+        this.getmyschoolMutualList(0,0,1)
+    },
+    methods: {
+        selectItem(id){
+            alert(1)
+            this.$router.push({
+                path: `/help-list/${id}`
+            })
+        },
+        // 获取列表
+        getmyschoolMutualList(state,type,page){
+            this.$http({
+                url: API.Interface.myschoolMutualList(state,type,page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    console.log(res.data.data)
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+    },
+    components: {
+
     }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .my-list

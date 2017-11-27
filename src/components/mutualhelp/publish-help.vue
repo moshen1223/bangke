@@ -44,7 +44,7 @@
             <h6>互助内容</h6>
             <el-input
                 type="textarea"
-                :rows="2"
+                :rows="1"
                 placeholder="请输入内容"
                 v-model="discription">
             </el-input>
@@ -52,31 +52,40 @@
         <div class="range">
             <h6>回答范围</h6>
             <div>
-                <el-radio v-model="schoolRange" label="1">本学校</el-radio>
+                <el-radio v-model="schoolRange" label="1">本学校内</el-radio>
                 <el-radio v-model="schoolRange" label="2">所有学校</el-radio>
             </div>
         </div>
         <div class="range">
             <h6>业务类型</h6>
             <div>
-                <el-radio v-model="brokerage" label="1">赚佣金</el-radio>
+                <el-radio v-model="brokerage" label="1">赚取佣金</el-radio>
                 <el-radio v-model="brokerage" label="2">支付佣金</el-radio>
             </div>
         </div>
         <div class="range">
             <h6>金额类型</h6>
             <div>
-                <el-radio v-model="moneyType" label="1">现金</el-radio>
-                <el-radio v-model="moneyType" label="2">线上转账</el-radio>
+                <el-radio v-model="moneyType" label="3">现金</el-radio>
+                <el-radio v-model="moneyType" label="1">金币</el-radio>
             </div>
         </div>
         <div class="title">
-            <h6>金额</h6>
-            <el-input v-model="account" placeholder="请输入奖励值"></el-input> 
+            <h6>金额数值</h6>
+            <el-input v-model="account" placeholder="请输入具体金额"></el-input> 
+        </div>
+        <div class="disc">
+            <h6>备注</h6>
+            <el-input
+                type="textarea"
+                :rows="2"
+                placeholder="请输入备注内容"
+                v-model="remark">
+            </el-input>
         </div>
     </div>
     <div class="space"></div>
-    <div class="commit">提交</div>
+    <div class="commit" @click="publishMutual">提交</div>
 </div>
 </template>
 <script>
@@ -101,8 +110,9 @@ export default{
             discription: '',
             schoolRange: '1',
             brokerage: '1',
-            moneyType: '1',
-            account: ''
+            moneyType: '3',
+            account: '',
+            remark: ''
         }
     },
     computed: {
@@ -117,7 +127,6 @@ export default{
         
     },
     methods: {
-        
         // 点击选择图片
         picImg1(){
             this.$refs['inputFile1'].click();
@@ -189,7 +198,49 @@ export default{
                 console.log(error)
             })
         },
-        
+        // 发布互助
+        publishMutual(){
+            if(this.pic1) {
+                this.picUrlArr.push(this.pic1);
+            }
+            if(this.pic2) {
+                this.picUrlArr.push(this.pic2);
+            }
+            if(this.pic3) {
+                this.picUrlArr.push(this.pic3);
+            }
+            if(!this.title){
+                alert('请完善标题！');
+                return
+            }
+            if(!this.discription || this.discription.length>500){
+                alert('请输入1~500长度的描述！');
+                return
+            }
+            this.$http({
+                url: API.Interface.publishMutual(),
+                method: 'post',
+                data: querystring.stringify({
+                    title: this.title,    
+                    content: this.discription,
+                    pictureList: this.picUrlArr,
+                    isAll: this.schoolRange == 2 ? true : false,
+                    objectType: this.moneyType == 3 ? 3 : 1,
+                    objectValue: parseFloat(this.account),
+                    remark: this.remark
+                }),
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    console.log(res.data.data)
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
     },
     components: {
 
@@ -264,6 +315,9 @@ export default{
                 color: #87807f
                 margin-bottom: 6px
             .pic
+                width: 100%
+                height: 100px
+                overflow: hidden
                 .file
                     display: none
                 img
