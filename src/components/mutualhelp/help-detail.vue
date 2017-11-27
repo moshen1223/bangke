@@ -63,22 +63,104 @@
 </div>
 </template>
 <script>
-    export default{
-        data(){
-            return {
-                answer: ''
-            }
-        },
-        computed: {
-        },
-        mounted(){
-        },
-        methods: {
-        },
-        components: {
-
+import storage from 'good-storage';
+import Bangke from 'api/api';
+const querystring = require('querystring');
+export default{
+    data(){
+        return {
+            answer: ''
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+    },
+    methods: {
+        // 获取互助详情
+        getMutualDetail(id){
+            this.$http({
+                url: API.Interface.getMutualDetail(id),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        // 获取互助回答列表
+        getMutualAnswerList(id, page){
+            this.$http({
+                url: API.Interface.getMutualAnswerList(id, page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        // 发布互助答案
+        publishMutualAnswer(){
+            this.$http({
+                url: API.Interface.publishMutualAnswer(),
+                method: 'post',
+                data: querystring.stringify({
+                    'mutualId': '',
+                    'content': ''
+                }),
+                headers: {
+                'timestamp':  API.timeStr,
+                'access_token': ''
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        // 设置最佳答案
+        setMutualBestAnswer(){
+            this.$http({
+                url: API.Interface.setMutualBestAnswer(),
+                method: 'PUT',
+                data: querystring.stringify({
+                    'mutualId': '',
+                    'id': ''
+                }),
+                headers: {
+                'timestamp':  API.timeStr,
+                'access_token': ''
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    },
+    components: {
+
     }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .help-detail
