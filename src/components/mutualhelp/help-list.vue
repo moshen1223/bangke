@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </li>
-            <li>
+            <li @click="selectItem(2)">
                 <div class="left">
                     <div >
                         <!--<img src="">-->
@@ -58,6 +58,7 @@
     <router-link tag="div"  class="commit" to="/publish-help">
         我要提问
     </router-link>
+    <router-view class="view-position"></router-view>
     <div class="mask" v-show="maskShow"></div>
 </div>
 </template>
@@ -65,7 +66,7 @@
 import storage from 'good-storage';
 import API from 'api/api';
 const querystring = require('querystring');
-import {mapGetters} from 'vuex';
+import {mapGetters,mapMutations} from 'vuex';
 
 export default{
     data(){
@@ -86,6 +87,7 @@ export default{
             this.$router.push({
                 path: `/help-list/${id}`
             })
+            this.setMutualId(id)
         },
         // 获取列表
         getmyschoolMutualList(state,type,page){
@@ -103,7 +105,10 @@ export default{
             }).catch((error) => {
                 console.log(error)
             })
-        }
+        },
+        ...mapMutations({
+            setMutualId : 'SET_MUTUALID'
+        })
     },
     components: {
 
@@ -273,6 +278,10 @@ export default{
         position: fixed
         left: 0
         bottom: 0
+    .view-position
+        position: absolute
+        top: 0
+        z-index: 99
     .mask
         position: absolute
         top: 0 

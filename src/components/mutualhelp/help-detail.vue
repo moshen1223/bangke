@@ -64,8 +64,9 @@
 </template>
 <script>
 import storage from 'good-storage';
-import Bangke from 'api/api';
+import API from 'api/api';
 const querystring = require('querystring');
+import {mapGetters} from 'vuex';
 export default{
     data(){
         return {
@@ -75,9 +76,11 @@ export default{
     computed: {
         login_info(){
             return storage.session.get('login_info')
-        }
+        },
+        ...mapGetters(['mutualId'])
     },
     mounted(){
+        this.getMutualDetail(this.mutualId)
     },
     methods: {
         // 获取互助详情
@@ -167,6 +170,7 @@ export default{
     width: 100%
     height: 100%
     background: #f1efed 
+    overflow: scroll
     letter-spacing: 1px
     padding-top: 8px
     .seek-content
