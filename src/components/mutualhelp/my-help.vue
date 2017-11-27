@@ -58,22 +58,62 @@
 </div>
 </template>
 <script>
-    export default{
-        data(){
-            return {
-                maskShow: false
-            }
-        },
-        computed: {
-        },
-        mounted(){
-        },
-        methods: {
-        },
-        components: {
+import storage from 'good-storage';
+import Bangke from 'api/api';
 
+export default{
+    data(){
+        return {
+            maskShow: false
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+    },
+    methods: {
+        // 获取我发布的互助列表  
+        getMyPublishMutualList(state,type,page){
+            this.$http({
+                url: API.Interface.getMyPublishMutualList(state,type,page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        // 获取我参与的互助列表  
+        getMyparticipateMutualList(state,type,page){
+            this.$http({
+                url: API.Interface.getMyparticipateMutualList(state,type,page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    },
+    components: {
+
     }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .help-list

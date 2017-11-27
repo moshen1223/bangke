@@ -62,27 +62,66 @@
 </div>
 </template>
 <script>
-    export default{
-        data(){
-            return {
-                maskShow: false
-            }
-        },
-        computed: {
-        },
-        mounted(){
-        },
-        methods: {
-            selectItem(id){
-                this.$router.push({
-                    path: `/help-list/${id}`
-                })
-            }
-        },
-        components: {
-
+import storage from 'good-storage';
+import Bangke from 'api/api';
+export default{
+    data(){
+        return {
+            maskShow: false
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+    },
+    methods: {
+        selectItem(id){
+            this.$router.push({
+                path: `/help-list/${id}`
+            })
+        },
+        // 获取本校互助列表  
+        getMySchoolMutualList(state,type,page){
+            this.$http({
+                url: API.Interface.myschoolMutualList(state,type,page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        // 获取全部互助列表
+        getAllschoolMutualList(state,type,page){
+            this.$http({
+                url: API.Interface.allschoolMutualList(state,type,page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    },
+    components: {
+
     }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .my-list
