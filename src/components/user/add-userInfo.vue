@@ -23,12 +23,18 @@
                     </el-select>
                 </div>
                 <div class="right">
-                    <el-select v-model="departmentID" placeholder="请选择专业">
+                    <el-select
+                            v-model="departmentID"
+                            :filterable = "true"
+                            :remote = "true"
+                            placeholder="请输入专业关键词"
+                            :remote-method="remoteDepartmentMethod"
+                            :loading="loading2">
                         <el-option
-                        v-for="item in departments"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                            v-for="item in departments"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -85,6 +91,7 @@ export default{
             departments: [],
             departmentName: '',
             departmentID: '',
+            loading2: false,
             sex: '0',
             avatorBase64: '',
             avatorURL: AvatarDefault,
@@ -130,6 +137,21 @@ export default{
             }).catch((error) => {
                 console.log(error);
             })
+        },
+        // 搜索专业
+        remoteDepartmentMethod(query){
+            if (!this.schoolID){
+                return;
+            };
+            if (query !== '') {
+                this.loading2 = true;
+                setTimeout(() => {
+                    this.loading2 = false;
+                    this.getMagorList(this.schoolID, query, 1);
+                }, 200);
+            } else {
+                this.departments = [];
+            }
         },
         // 获取专业列表
         getMagorList(number,name,page){
@@ -257,18 +279,6 @@ export default{
             }).catch((error)=>{
                 console.log(error);
             });
-        }
-    },
-    watch:{
-        schoolID(){
-            if(this.schools.length){
-                this.schools.forEach((item)=>{
-                    if(item.id == this.schoolID){
-                        this.schoolName = item.name;
-                        this.getMagorList(this.schoolID, this.schoolName, 1)
-                    }
-                });
-            }
         }
     }
 }
