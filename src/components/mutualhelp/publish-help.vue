@@ -59,8 +59,8 @@
         <div class="range">
             <h6>业务类型</h6>
             <div>
-                <el-radio v-model="brokerage" label="1">赚取佣金</el-radio>
-                <el-radio v-model="brokerage" label="2">支付佣金</el-radio>
+                <el-radio v-model="consumetype" label="1">赚取佣金</el-radio>
+                <el-radio v-model="consumetype" label="2">支付佣金</el-radio>
             </div>
         </div>
         <div class="range">
@@ -105,11 +105,11 @@ export default{
             pic2: '',
             pic3Base64: '',
             pic3: '',
-            picUrlArr: [],
+            picUrlStr: '',
             title: '',
             discription: '',
             schoolRange: '1',
-            brokerage: '1',
+            consumetype: '1',
             moneyType: '3',
             account: '',
             remark: ''
@@ -201,13 +201,13 @@ export default{
         // 发布互助
         publishMutual(){
             if(this.pic1) {
-                this.picUrlArr.push(this.pic1);
+                this.picUrlStr += this.pic1;
             }
             if(this.pic2) {
-                this.picUrlArr.push(this.pic2);
+                this.picUrlStr += ',' + this.pic2;
             }
             if(this.pic3) {
-                this.picUrlArr.push(this.pic3);
+                this.picUrlStr += ',' + this.pic3;
             }
             if(!this.title){
                 alert('请完善标题！');
@@ -223,8 +223,9 @@ export default{
                 data: querystring.stringify({
                     title: this.title,    
                     content: this.discription,
-                    pictureList: this.picUrlArr,
+                    pictureList: this.picUrlStr,
                     isAll: this.schoolRange == 2 ? true : false,
+                    type: this.consumetype,
                     objectType: this.moneyType == 3 ? 3 : 1,
                     objectValue: parseFloat(this.account),
                     remark: this.remark
@@ -235,6 +236,7 @@ export default{
                 }
             }).then((res) => {
                 if(res.data.code == 200){
+                    this.$router.push('/help-list');
                     console.log(res.data.data)
                 }
             }).catch((error) => {

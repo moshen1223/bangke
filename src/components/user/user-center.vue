@@ -40,9 +40,9 @@
                 <li>
                     <img src="./msg.png"><span>消息</span><i class="arrow"></i>
                 </li>
-                <li>
+                <router-link tag="li" to="/addUserInfo">
                     <img src="./set.png"><span>设置</span><i class="arrow"></i>
-                </li>
+                </router-link>
             </ul>
         </div>
         <div class="space"></div>

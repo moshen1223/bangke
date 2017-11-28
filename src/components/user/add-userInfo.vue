@@ -78,7 +78,7 @@
 import storage from 'good-storage';
 import API from 'api/api';
 import AvatarDefault from './avatar.png';
-import {mapGetters} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
 const querystring = require('querystring');
 
 export default{
@@ -111,15 +111,11 @@ export default{
     methods:{
         // 学校搜索
         remoteSchoolMethod(query) {
-            if (query !== '') {
-                this.loading = true;
-                setTimeout(() => {
-                    this.loading = false;
-                    this.getSchoolList(query, 1);
-                }, 200);
-            } else {
-                this.schools = [];
-            }
+            this.loading = true;
+            setTimeout(() => {
+                this.loading = false;
+                this.getSchoolList(query, 1);
+            }, 200);
         },
         // 获取学校列表
         getSchoolList(name,page){
@@ -143,15 +139,11 @@ export default{
             if (!this.schoolID){
                 return;
             };
-            if (query !== '') {
-                this.loading2 = true;
-                setTimeout(() => {
-                    this.loading2 = false;
-                    this.getMagorList(this.schoolID, query, 1);
-                }, 200);
-            } else {
-                this.departments = [];
-            }
+            this.loading2 = true;
+            setTimeout(() => {
+                this.loading2 = false;
+                this.getMagorList(this.schoolID, query, 1);
+            }, 200);
         },
         // 获取专业列表
         getMagorList(number,name,page){
@@ -275,11 +267,36 @@ export default{
                     'access_token': this.login_info.access_token
                 }
             }).then((res)=>{
-                console.log(res);
+                if(res.data.code == 200){
+                    this.getUserInfo();
+                    this.$router.push('/user');
+                }
             }).catch((error)=>{
                 console.log(error);
             });
-        }
+        },
+        // 获取用户信息
+        getUserInfo() {
+            this.$http({
+                url: API.Interface.getUserInfo(),
+                method: 'get',
+                headers: {
+                'timestamp':  API.timeStr,
+                'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.setCompletepage(!res.data.data.isFristBasicInfo);
+                    this.setUserInfo(res.data.data)
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        ...mapMutations({
+            setCompletepage : 'SET_COMPLETEPAGE',
+            setUserInfo : 'SET_USERINFO'
+        })
     }
 }
 </script>
