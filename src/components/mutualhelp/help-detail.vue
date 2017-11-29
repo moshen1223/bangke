@@ -3,23 +3,23 @@
     <div class="seek-content">
         <div class="seek-user">
             <div class="user-head">
-                <div></div>
+                <div>
+                    <img v-if="questionDetail.userHeadUrl" :src="questionDetail.userHeadUrl">
+                </div>
             </div>
             <div class="user-info">
-                <h5>隔壁老王</h5>
-                <div><span>11-17 23:47</span><b>河南师范大学</b></div>
+                <h5 v-text="questionDetail.userName"></h5>
+                <div><span>{{questionDetail.createTime}}</span><b>{{questionDetail.userSchoolName}}</b></div>
             </div>
         </div>
-        <p class="seek-disc">
-            马上要四级考试了，英语学不好，怎么办？有没有英语方面的大神带带，
-            求助，有下图奖励哦~
+        <p class="seek-disc" v-text="questionDetail.title">
         </p>
         <div class="award">
             <img src="./award.png">
         </div>
         <div class="issue">
-            <h4>互助内容：英语四级考试学士方式。</h4>
-            <p>如果你是大神，你就来，共同提高！</p>
+            <h4 v-text="questionDetail.content"></h4>
+            <p v-text="questionDetail.remark"></p>
         </div>
     </div>
     <h3 class="answer-title">精彩回答</h3>
@@ -56,7 +56,7 @@
         <div class="left">
             <input type="text" v-model="answer" placeholder="请输入回答"/>
         </div>
-        <div class="right">
+        <div class="right" @click="submitAnswer">
             <span>提交</span>
         </div>
     </div>
@@ -70,7 +70,8 @@ import {mapGetters} from 'vuex';
 export default{
     data(){
         return {
-            answer: ''
+            answer: '',
+            questionDetail:{}
         }
     },
     computed: {
@@ -94,7 +95,7 @@ export default{
                 }
             }).then((res) => {
                 if(res.data.code == 200){
-
+                    this.questionDetail = res.data.data
                 }
             }).catch((error) => {
                 console.log(error);
@@ -117,22 +118,27 @@ export default{
                 console.log(error);
             })
         },
+        submitAnswer(){
+            if(this.answer){
+                this.publishMutualAnswer();
+            }
+        },
         // 发布互助答案
         publishMutualAnswer(){
             this.$http({
                 url: API.Interface.publishMutualAnswer(),
                 method: 'post',
                 data: querystring.stringify({
-                    'mutualId': '',
-                    'content': ''
+                    'mutualId': this.mutualId,
+                    'content': this.answer
                 }),
                 headers: {
                 'timestamp':  API.timeStr,
-                'access_token': ''
+                'access_token': this.login_info.access_token
                 }
             }).then((res) => {
                 if(res.data.code == 200){
-
+                    this.answer = '';
                 }
             }).catch((error) => {
                 console.log(error);
@@ -149,7 +155,7 @@ export default{
                 }),
                 headers: {
                 'timestamp':  API.timeStr,
-                'access_token': ''
+                'access_token': this.login_info.access_token
                 }
             }).then((res) => {
                 if(res.data.code == 200){
@@ -212,9 +218,10 @@ export default{
             width: 100%
             margin-top: 6px
             overflow: hidden
+            display: flex
             img
+                flex: 1
                 width: 100%
-                height: auto
         .issue
             background: #f5f5f5
             margin-top: -1px

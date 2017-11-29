@@ -1,51 +1,36 @@
 <template>
 <div class="my-list">
     <div class="help-type">
-        <div class="active">
+        <div :class="{'active' : helpRange == 1}" @click="selectHelpRange(1)">
             <span>本校互助</span>
-            <i></i>
+            <b @click="showSlect"><i></i></b>
         </div>
-        <div>
+        <div :class="{'active' : helpRange == 2}" @click="selectHelpRange(2)">
             <span>全国互助</span>
-            <i></i>
+            <b @click="showSlect"><i></i></b>
         </div>
     </div>
     <div class="status">
-        <div class="select-type">已选："已完成状态" "奖励类型"</div>
-        <div class="select-btn">
-            <div><b>状态：</b><span>全部</span><span>未完成</span><span class="selected">已完成</span></div>
-            <div><b>类型：</b><span>全部</span><span>奖励</span><span class="selected">赚取</span></div>
+        <div class="select-type">状态:{{selectState == 0 ? '全部' : selectState == 1 ? '未完成' : '已完成'}}&nbsp;&nbsp;&nbsp;&nbsp;奖励:{{selectType == 0 ? '全部' : selectType == 1 ? '奖励' : '赚取'}}</div>
+        <div class="select-btn" v-show="maskShow">
+            <div><b>状态：</b><span @click="selectStateMethod(0)"  :class="{'selected': selectState == 0}">全部</span><span @click="selectStateMethod(1)"  :class="{'selected': selectState == 1}">未完成</span><span @click="selectStateMethod(2)" :class="{'selected': selectState == 2}">已完成</span></div>
+            <div><b>类型：</b><span @click="selectTypeMethod(0)"   :class="{'selected': selectType == 0}">全部</span><span @click="selectTypeMethod(1)"  :class="{'selected': selectType == 1}">奖励</span><span @click="selectTypeMethod(2)"  :class="{'selected': selectType == 2}">赚取</span></div>
         </div>
     </div>
     <div class="list">
         <ul>
-            <li @click="selectItem(1)">
+            <li v-for="(item,index) in helpList" :key="index" @click="selectItem(item.id)">
                 <div class="left">
-                    <div >
-                        <!--<img src="">-->
+                    <div>
+                        <img v-if="item.pictureUr" :src="item.pictureUrl">
                     </div>
                 </div>
                 <div class="right">
-                    <h5>交通银行信用卡搞活动了，额度2万起</h5>
-                    <p>奖励内容: 充电宝</p>
-                    <div class="pay"><span>推广费 ￥ 10.00</span></div>
+                    <h5 v-text="item.title"></h5>
+                    <p>奖励内容: {{item.reward}}</p>
+                    <div class="pay"><span>{{item.rewardRemark}}</span></div>
                     <div class="participation">
-                        <span>参与人数 188</span>
-                    </div>
-                </div>
-            </li>
-            <li @click="selectItem(2)">
-                <div class="left">
-                    <div >
-                        <!--<img src="">-->
-                    </div>
-                </div>
-                <div class="right">
-                    <h5>交通银行信用卡搞活动了，额度2万起</h5>
-                    <p>奖励内容: 拉杆箱一个</p>
-                    <div class="pay"><span>推广费 ￥ 15.00</span></div>
-                    <div class="participation">
-                        <span>参与人数 189</span>
+                        <span>参与人数 {{item.commnetCount}}</span>
                     </div>
                 </div>
             </li>
@@ -59,7 +44,7 @@
         我要提问
     </router-link>
     <router-view class="view-position"></router-view>
-    <div class="mask" v-show="maskShow"></div>
+    <div class="mask" @click="hideSelect" v-show="maskShow"></div>
 </div>
 </template>
 <script>
@@ -71,7 +56,12 @@ import {mapGetters,mapMutations} from 'vuex';
 export default{
     data(){
         return {
-            maskShow: false
+            maskShow: false,
+            helpList: [],
+            selectType: 0,
+            selectState: 0,
+            helpRange: 1,
+            page: 1
         }
     },
     computed: {
@@ -80,16 +70,40 @@ export default{
         }
     },
     mounted(){
-        this.getmyschoolMutualList(0,0,1)
+        this.getmyschoolMutualList(this.selectState,this.selectType,this.page)
     },
     methods: {
+        // 选择互助范围
+        selectHelpRange(type){
+            this.helpRange = type;
+            this.helpList = [];
+            this.selectType = 0;
+            this.selectState = 0;
+        },
+        // 选择状态
+        selectStateMethod(state){
+            this.selectState = state;
+        },
+        // 选择类型
+        selectTypeMethod(type){
+            this.selectType = type;
+        },
+        // 选择列表类型
+        showSlect(){
+            this.maskShow = true;
+        },
+        // mask 隐藏
+        hideSelect(){
+            this.maskShow = false;
+        },
+        // 查看详情
         selectItem(id){
             this.$router.push({
                 path: `/help-list/${id}`
             })
             this.setMutualId(id)
         },
-        // 获取列表
+        // 获取本校列表
         getmyschoolMutualList(state,type,page){
             this.$http({
                 url: API.Interface.myschoolMutualList(state,type,page),
@@ -100,7 +114,24 @@ export default{
                 }
             }).then((res) => {
                 if(res.data.code == 200){
-                    console.log(res.data.data)
+                    this.helpList = res.data.data;
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
+        // 获取全部列表
+        getallschoolMutualList(state,type,page){
+            this.$http({
+                url: API.Interface.allschoolMutualList(state,type,page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.helpList = res.data.data;
                 }
             }).catch((error) => {
                 console.log(error)
@@ -110,8 +141,14 @@ export default{
             setMutualId : 'SET_MUTUALID'
         })
     },
-    components: {
-
+    watch:{
+        helpRange(){
+            if(this.helpRange == 1){
+                this.getmyschoolMutualList(this.selectState,this.selectType,this.page)
+            }else{
+                this.getallschoolMutualList(this.selectState,this.selectType,this.page)
+            }
+        }
     }
 }
 </script>
@@ -134,6 +171,8 @@ export default{
         text-align: center
         font-size: 0
         display: flex
+        position: relative
+        z-index: 100
         div
             flex: 1
             background: #fff
@@ -142,22 +181,30 @@ export default{
                 font-size: 13px
                 color: #333
                 vertical-align: middle
-            i
-                display: inline-block
-                width: 7px
-                height: 5px
-                margin-left: 8px
-                background: url('./arrow.png') no-repeat
-                background-size: 7px 5px
-                vertical-align: middle
+            b
+                padding: 10px 10px 10px 5px
+                i
+                    display: inline-block
+                    width: 7px
+                    height: 5px
+                    margin-left: 8px
+                    background: url('./arrow.png') no-repeat
+                    background-size: 7px 5px
+                    vertical-align: middle
         .active
             background: #fc5558
             span
                 color: #fff
-            i
-                background: url('./arrow-white.png') no-repeat
-                background-size: 7px 5px
+            b
+                padding: 10px 10px 10px 5px
+                i
+                    background: url('./arrow-white.png') no-repeat
+                    background-size: 7px 5px
     .status
+        position: relative
+        top: 0
+        left: 0
+        z-index: 100
         .select-type
             height: 20px
             line-height: 20px
@@ -166,6 +213,7 @@ export default{
             color: #87807f
             background: #fff
         .select-btn
+            background: #f2eeed
             div
                 height: 36px
                 line-height: 36px
@@ -281,7 +329,7 @@ export default{
     .view-position
         position: absolute
         top: 0
-        z-index: 99
+        z-index: 200
     .mask
         position: absolute
         top: 0 
@@ -289,6 +337,6 @@ export default{
         left: 0
         right: 0
         background: rgba(0,0,0,0.5)
-        z-index: 100
+        z-index: 10
 
 </style>
