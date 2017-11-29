@@ -225,6 +225,7 @@ export default{
             img
                 flex: 1
                 width: 100%
+                height: 100%
         .issue
             background: #f5f5f5
             margin-top: -1px
