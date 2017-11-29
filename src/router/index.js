@@ -76,11 +76,7 @@ const AddressManage = (resolve) => {
 }
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      redirect: '/home'
-    },{
+  routes: [{
       path: '/user',
       component: UserCenter
     },{

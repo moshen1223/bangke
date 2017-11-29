@@ -70,6 +70,7 @@ export default {
         }
       }).then((res) => {
         if(res.data.code == 200 && res.data.message == "授权成功"){
+          this.$router.push('/home');
           storage.session.set('login_info', {
             access_token: res.data.data.access_token,
             headUrl: res.data.data.headUrl,
