@@ -15,7 +15,7 @@
         <p class="seek-disc" v-text="questionDetail.title">
         </p>
         <div class="award">
-            <img src="./award.png">
+            <img v-for="(item, index) in questionDetail.pictureList" :key="index" :src="item">
         </div>
         <div class="issue">
             <h4 v-text="questionDetail.content"></h4>
@@ -133,8 +133,8 @@ export default{
                     'content': this.answer
                 }),
                 headers: {
-                'timestamp':  API.timeStr,
-                'access_token': this.login_info.access_token
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
                 }
             }).then((res) => {
                 if(res.data.code == 200){
@@ -192,6 +192,9 @@ export default{
                     border-radius: 2px
                     background: #fc5459
                     overflow: hidden
+                    img 
+                        width: 100%
+                        height: auto
             .user-info
                 padding-left: 8px
                 -webkit-box-sizing: border-box
