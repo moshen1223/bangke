@@ -76,9 +76,6 @@ export default{
         // 选择互助范围
         selectHelpRange(type){
             this.helpRange = type;
-            this.helpList = [];
-            this.selectType = 0;
-            this.selectState = 0;
         },
         // 选择状态
         selectStateMethod(state){
@@ -148,9 +145,12 @@ export default{
     },
     watch:{
         helpRange(){
+            this.helpList = [];
+            this.selectType = 0;
+            this.selectState = 0;
             if(this.helpRange == 1){
                 this.getmyschoolMutualList(this.selectState,this.selectType,this.page)
-            }else{
+            }else if(this.helpRange == 2){
                 this.getallschoolMutualList(this.selectState,this.selectType,this.page)
             }
         }

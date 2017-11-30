@@ -44,8 +44,10 @@
 </div>
 </template>
 <script>
+const querystring = require('querystring');
 import storage from 'good-storage';
-import Bangke from 'api/api';
+import API from 'api/api';
+import {mapGetters,mapMutations} from 'vuex';
 
 export default{
     data(){
@@ -70,9 +72,6 @@ export default{
         // 选择互助范围
         selectHelpRange(type){
             this.helpType = type;
-            this.helpList = [];
-            this.selectType = 0;
-            this.selectState = 0;
         },
         // 选择状态
         selectStateMethod(state){
@@ -145,6 +144,9 @@ export default{
     },
     watch:{
         helpType(){
+            this.helpList = [];
+            this.selectType = 0;
+            this.selectState = 0;
             if(this.helpType == 1){
                 this.getMyPublishMutualList(this.selectType, this.selectState, this.page);
             }else{
