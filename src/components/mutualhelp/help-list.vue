@@ -94,6 +94,11 @@ export default{
         },
         // mask 隐藏
         hideSelect(){
+            if(this.helpRange == 1){
+                this.getmyschoolMutualList(this.selectState,this.selectType,this.page)
+            }else{
+                this.getallschoolMutualList(this.selectState,this.selectType,this.page)
+            }
             this.maskShow = false;
         },
         // 查看详情

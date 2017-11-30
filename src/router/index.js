@@ -50,7 +50,11 @@ const MyHelp = (resolve) => {
     resolve(module)
   })
 }
-
+const MyHelpDetail = (resolve) => {
+  import('components/mutualhelp/my-help-detail').then((module) => {
+    resolve(module)
+  })
+}
 const PublishHelp = (resolve) => {
   import('components/mutualhelp/publish-help').then((module) => {
     resolve(module)
@@ -84,7 +88,13 @@ export default new Router({
       component: HomePage
     },{
       path: '/my-help',
-      component: MyHelp 
+      component: MyHelp,
+      children:[
+        {
+          path: ':id',
+          component: MyHelpDetail
+        }
+      ]
     },{
       path: '/help-list',
       component: HelpList,

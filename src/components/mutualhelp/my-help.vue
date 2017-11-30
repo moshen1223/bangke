@@ -19,33 +19,18 @@
     </div>
     <div class="list">
         <ul>
-            <li>
+            <li v-for="(item, index) in helpList" :key="index"  @click="selectItem(item.id)">
                 <div class="left">
                     <div >
-                        <!--<img src="">-->
+                        <img v-if="item.pictureUrl" :src="item.pictureUrl">
                     </div>
                 </div>
                 <div class="right">
-                    <h5>交通银行信用卡搞活动了，额度2万起，免年费了</h5>
-                    <p>奖励内容: 拉杆箱一个</p>
-                    <div class="pay"><span>推广费 ￥ 5.00</span></div>
+                    <h5 v-text="item.title"></h5>
+                    <p>奖励内容: {{item.reward}}</p>
+                    <div class="pay"><span>{{item.rewardRemark}}</span></div>
                     <div class="participation">
-                        <span>参与人数 188</span>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="left">
-                    <div >
-                        <!--<img src="">-->
-                    </div>
-                </div>
-                <div class="right">
-                    <h5>交通银行信用卡搞活动了，额度2万起，免年费了</h5>
-                    <p>奖励内容: 拉杆箱一个</p>
-                    <div class="pay"><span>推广费 ￥ 5.00</span></div>
-                    <div class="participation">
-                        <span>参与人数 188</span>
+                        <span>参与人数 {{item.commnetCount}}</span>
                     </div>
                 </div>
             </li>
@@ -54,6 +39,7 @@
     <div class="no-more">
         <div><span>暂无更多内容</span></div>
     </div>
+    <router-view class="view-position"></router-view>
     <div class="mask" @click="hideSelect" v-show="maskShow"></div>
 </div>
 </template>
@@ -78,6 +64,7 @@ export default{
         }
     },
     mounted(){
+        this.getMyPublishMutualList(this.selectType, this.selectState, this.page);
     },
     methods: {
         // 选择互助范围
@@ -101,7 +88,25 @@ export default{
         },
         // mask 隐藏
         hideSelect(){
+            if(this.helpType == 1){
+                this.getMyPublishMutualList(this.selectType, this.selectState, this.page);
+            }else{
+                this.getMyparticipateMutualList(this.selectType, this.selectState, this.page);
+            }
             this.maskShow = false;
+        },
+        // 查看详情
+        selectItem(id){
+            if(this.helpType == 1){
+                this.$router.push({
+                    path: `/my-help/${id}`
+                })
+            }else if(this.helpType == 2){
+                this.$router.push({
+                    path: `/help-list/${id}`
+                })
+            }
+            this.setMutualId(id)
         },
         // 获取我发布的互助列表  
         getMyPublishMutualList(state,type,page){
@@ -114,7 +119,7 @@ export default{
                 }
             }).then((res) => {
                 if(res.data.code == 200){
-
+                    this.helpList = res.data.data;
                 }
             }).catch((error) => {
                 console.log(error);
@@ -131,15 +136,21 @@ export default{
                 }
             }).then((res) => {
                 if(res.data.code == 200){
-
+                    this.helpList = res.data.data;
                 }
             }).catch((error) => {
                 console.log(error);
             })
         }
     },
-    components: {
-
+    watch:{
+        helpType(){
+            if(this.helpType == 1){
+                this.getMyPublishMutualList(this.selectType, this.selectState, this.page);
+            }else{
+                this.getMyparticipateMutualList(this.selectType, this.selectState, this.page);
+            }
+        }
     }
 }
 </script>
@@ -304,6 +315,10 @@ export default{
                 -moz-transform: translateX(-50%)
                 -o-transform: translateX(-50%)
                 transform: translateX(-50%)
+    .view-position
+        position: absolute
+        top: 0
+        z-index: 200
     .mask
         position: absolute
         top: 0 

@@ -35,20 +35,11 @@
                     <h5>{{item.userName}}</h5>
                     <p v-text="item.content"></p>
                     <div class="replay-status">
-                        <span>{{item.createTime}}</span>
+                        <i :class="{'accepted': item.isEnabled}" @click="setBestAnswer(item.id, item.mutualId)"></i><span>{{item.createTime}}</span>
                     </div>
-                    <strong class="replay-sign" v-show="item.isEnabled"></strong>
                 </div>
             </li>
         </ul>
-    </div>
-    <div class="submit">
-        <div class="left">
-            <input type="text" v-model="answer" placeholder="请输入回答"/>
-        </div>
-        <div class="right" @click="submitAnswer">
-            <span>提交</span>
-        </div>
     </div>
 </div>
 </template>
@@ -111,28 +102,25 @@ export default{
                 console.log(error);
             })
         },
-        submitAnswer(){
-            if(this.answer){
-                this.publishMutualAnswer();
-            }
+        // 设置最佳答案
+        setBestAnswer(id, mutualId){
+            this.setMutualBestAnswer(id, mutualId)
         },
-        // 发布互助答案
-        publishMutualAnswer(){
+        setMutualBestAnswer(id, mutualId){
             this.$http({
-                url: API.Interface.publishMutualAnswer(),
-                method: 'post',
+                url: API.Interface.setMutualBestAnswer(),
+                method: 'PUT',
                 data: querystring.stringify({
-                    'mutualId': this.mutualId,
-                    'content': this.answer
+                    'mutualId': mutualId,
+                    'id': id
                 }),
                 headers: {
-                    'timestamp':  API.timeStr,
-                    'access_token': this.login_info.access_token
+                'timestamp':  API.timeStr,
+                'access_token': this.login_info.access_token
                 }
             }).then((res) => {
                 if(res.data.code == 200){
-                    this.getMutualAnswerList(this.mutualId,this,page);
-                    this.answer = '';
+
                 }
             }).catch((error) => {
                 console.log(error);
@@ -271,14 +259,6 @@ export default{
                             height: 12px
                             background: url('./accept-text.png') no-repeat
                             background-size: 36px 12px
-                    .replay-sign
-                        width: 57px
-                        height: 56px
-                        background: url('./accept.png') no-repeat
-                        background-size: 57px 56px
-                        position: absolute
-                        top: 8px
-                        right: 14px
     .submit
         display: flex
         background: #fff
@@ -307,14 +287,4 @@ export default{
                 -moz-box-sizing: border-box
                 -o-box-sizing: border-box
                 box-sizing: border-box
-        .right
-            flex: 0 0 80px
-            span
-                display: inline-block
-                width: 100%
-                height: 32px
-                line-height: 32px
-                text-align: center
-                font-size: 15px
-                color: #333
 </style>
