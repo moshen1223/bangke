@@ -261,6 +261,9 @@ export default{
                         width: 75px
                         height: 75px
                         background: #fc5558
+                        img 
+                            width: 100%
+                            height: 100%
                 .right
                     flex: 1
                     position: relative
