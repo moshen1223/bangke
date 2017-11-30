@@ -222,7 +222,11 @@ export default{
                         border-radius: 2px
                         overflow: hidden
                         background: #f90
+                        img 
+                            width: 100%
+                            height: 100%
                 .replay-content
+                    flex: 1s
                     position: relative
                     padding: 1px 12px 12px 9px
                     -webkit-box-sizing: border-box
