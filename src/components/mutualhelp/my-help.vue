@@ -1,20 +1,20 @@
 <template>
 <div class="help-list">
     <div class="help-type">
-        <div class="active">
+        <div :class="{'active' : helpType == 1}" @click="selectHelpRange(1)">
             <span>我发表的互助</span>
-            <i></i>
+            <b @click="showSlect"><i></i></b>
         </div>
-        <div>
+        <div :class="{'active' : helpType == 2}" @click="selectHelpRange(2)">
             <span>我参与的互助</span>
-            <i></i>
+            <b @click="showSlect"><i></i></b>
         </div>
     </div>
     <div class="status">
-        <div class="select-type">已选："已完成状态" "奖励类型"</div>
-        <div class="select-btn">
-            <div><b>状态：</b><span>未完成</span><span class="selected">已完成</span></div>
-            <div><b>类型：</b><span>奖励</span><span class="selected">赚取</span></div>
+        <div class="select-type">状态:{{selectState == 0 ? '全部' : selectState == 1 ? '未完成' : '已完成'}}&nbsp;&nbsp;&nbsp;&nbsp;奖励:{{selectType == 0 ? '全部' : selectType == 1 ? '奖励' : '赚取'}}</div>
+        <div class="select-btn" v-show="maskShow">
+            <div><b>状态：</b><span @click="selectStateMethod(0)"  :class="{'selected': selectState == 0}">全部</span><span @click="selectStateMethod(1)"  :class="{'selected': selectState == 1}">未完成</span><span @click="selectStateMethod(2)" :class="{'selected': selectState == 2}">已完成</span></div>
+            <div><b>类型：</b><span @click="selectTypeMethod(0)"   :class="{'selected': selectType == 0}">全部</span><span @click="selectTypeMethod(1)"  :class="{'selected': selectType == 1}">奖励</span><span @click="selectTypeMethod(2)"  :class="{'selected': selectType == 2}">赚取</span></div>
         </div>
     </div>
     <div class="list">
@@ -54,7 +54,7 @@
     <div class="no-more">
         <div><span>暂无更多内容</span></div>
     </div>
-    <div class="mask" v-show="maskShow"></div>
+    <div class="mask" @click="hideSelect" v-show="maskShow"></div>
 </div>
 </template>
 <script>
@@ -64,7 +64,12 @@ import Bangke from 'api/api';
 export default{
     data(){
         return {
-            maskShow: false
+            maskShow: false,
+            helpList: [],
+            selectType: 0,
+            selectState: 0,
+            helpType: 1,
+            page: 1
         }
     },
     computed: {
@@ -75,6 +80,29 @@ export default{
     mounted(){
     },
     methods: {
+        // 选择互助范围
+        selectHelpRange(type){
+            this.helpType = type;
+            this.helpList = [];
+            this.selectType = 0;
+            this.selectState = 0;
+        },
+        // 选择状态
+        selectStateMethod(state){
+            this.selectState = state;
+        },
+        // 选择类型
+        selectTypeMethod(type){
+            this.selectType = type;
+        },
+        // 选择列表类型
+        showSlect(){
+            this.maskShow = true;
+        },
+        // mask 隐藏
+        hideSelect(){
+            this.maskShow = false;
+        },
         // 获取我发布的互助列表  
         getMyPublishMutualList(state,type,page){
             this.$http({
@@ -134,6 +162,8 @@ export default{
         text-align: center
         font-size: 0
         display: flex
+        position: relative
+        z-index: 100
         div
             flex: 1
             background: #fff
@@ -142,22 +172,30 @@ export default{
                 font-size: 13px
                 color: #333
                 vertical-align: middle
-            i
-                display: inline-block
-                width: 7px
-                height: 5px
-                margin-left: 8px
-                background: url('./arrow.png') no-repeat
-                background-size: 7px 5px
-                vertical-align: middle
+            b
+                padding: 10px 10px 10px 5px
+                i
+                    display: inline-block
+                    width: 7px
+                    height: 5px
+                    margin-left: 8px
+                    background: url('./arrow.png') no-repeat
+                    background-size: 7px 5px
+                    vertical-align: middle
         .active
             background: #fc5558
             span
                 color: #fff
-            i
-                background: url('./arrow-white.png') no-repeat
-                background-size: 7px 5px
+            b
+                padding: 10px 10px 10px 5px
+                i
+                    background: url('./arrow-white.png') no-repeat
+                    background-size: 7px 5px
     .status
+        position: relative
+        top: 0
+        left: 0
+        z-index: 100
         .select-type
             height: 20px
             line-height: 20px
@@ -166,6 +204,7 @@ export default{
             color: #87807f
             background: #fff
         .select-btn
+            background: #f2eeed
             div
                 height: 36px
                 line-height: 36px
@@ -272,6 +311,6 @@ export default{
         left: 0
         right: 0
         background: rgba(0,0,0,0.5)
-        z-index: 100
+        z-index: 10
 
 </style>

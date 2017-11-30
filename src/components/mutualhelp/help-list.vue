@@ -1,12 +1,12 @@
 <template>
-<div class="my-list">
+<div class="help-list">
     <div class="help-type">
         <div :class="{'active' : helpRange == 1}" @click="selectHelpRange(1)">
             <span>本校互助</span>
             <b @click="showSlect"><i></i></b>
         </div>
         <div :class="{'active' : helpRange == 2}" @click="selectHelpRange(2)">
-            <span>全国互助</span>
+            <span>其他互助</span>
             <b @click="showSlect"><i></i></b>
         </div>
     </div>
@@ -153,7 +153,7 @@ export default{
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-.my-list
+.help-list
     width: 100%
     background: #f1efed
     position: absolute
