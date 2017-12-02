@@ -85,7 +85,7 @@
         </div>
     </div>
     <div class="space"></div>
-    <div class="commit" @click="publishMutual">提交</div>
+    <div class="commit" @click.stop="publishMutual">提交</div>
 </div>
 </template>
 <script>

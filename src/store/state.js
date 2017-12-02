@@ -1,7 +1,8 @@
 const state = {
     completePage: false,
     userInfo : {},
-    mutualId: ''
+    mutualId: '',
+    receiveId: ''
 }
 
 export default state

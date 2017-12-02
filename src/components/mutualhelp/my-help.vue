@@ -3,11 +3,11 @@
     <div class="help-type">
         <div :class="{'active' : helpType == 1}" @click="selectHelpRange(1)">
             <span>我发表的互助</span>
-            <b @click="showSlect"><i></i></b>
+            <b @click="showSlect(1)"><i></i></b>
         </div>
         <div :class="{'active' : helpType == 2}" @click="selectHelpRange(2)">
             <span>我参与的互助</span>
-            <b @click="showSlect"><i></i></b>
+            <b @click="showSlect(2)"><i></i></b>
         </div>
     </div>
     <div class="status">
@@ -71,7 +71,11 @@ export default{
     methods: {
         // 选择互助范围
         selectHelpRange(type){
-            this.helpType = type;
+            if(type == this.helpType){
+                return;
+            }else{
+                this.helpType = type;
+            }
         },
         // 选择状态
         selectStateMethod(state){
@@ -82,8 +86,12 @@ export default{
             this.selectType = type;
         },
         // 选择列表类型
-        showSlect(){
-            this.maskShow = true;
+        showSlect(type){
+            if(type == this.helpType){
+                this.maskShow = true;
+            }else{
+                this.helpType = type;
+            }
         },
         // mask 隐藏
         hideSelect(){
@@ -140,7 +148,10 @@ export default{
             }).catch((error) => {
                 console.log(error);
             })
-        }
+        },
+        ...mapMutations({
+            setMutualId : 'SET_MUTUALID'
+        })
     },
     watch:{
         helpType(){

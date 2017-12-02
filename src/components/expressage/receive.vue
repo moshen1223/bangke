@@ -88,53 +88,83 @@
 </div>
 </template>
 <script>
-    export default{
-        data(){
-            return {
-                selectedPage: 0,
-                name: '',
-                phone: '',
-                address: '',
-                inventory: '',
-                logistics: '',
-                weight: '',
-                options: [{
-                    value: '选项1',
-                    label: '1kg以内'
-                    }, {
-                    value: '选项2',
-                    label: '1kg~3kg'
-                    }, {
-                    value: '选项5',
-                    label: '3kg以上'
-                }],
-                desciptionStatus: false
-            }
-        },
-        computed: {
-        },
-        mounted(){
-        },
-        methods: {
-            // 选择当前页
-            selectCurrentPage(page){
-                this.selectedPage = page;
-            },
-            desciptionShow(){
-                this.desciptionStatus = true
-            },
-            desciptionHide(){
-                this.desciptionStatus = false
-            },
-            // 收货人地址
-            selectAddress(){
-                console.log(123)
-            }
-        },
-        components: {
+import storage from 'good-storage';
+import API from 'api/api';
+import {mapGetters} from 'vuex';
+const querystring = require('querystring');
 
+export default{
+    data(){
+        return {
+            selectedPage: 0,
+            name: '',
+            phone: '',
+            address: '',
+            inventory: '',
+            logistics: '',
+            weight: '',
+            options: [{
+                value: '选项1',
+                label: '1kg以内'
+                }, {
+                value: '选项2',
+                label: '1kg~3kg'
+                }, {
+                value: '选项5',
+                label: '3kg以上'
+            }],
+            desciptionStatus: false
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+    },
+    methods: {
+        // 选择当前页
+        selectCurrentPage(page){
+            this.selectedPage = page;
+        },
+        desciptionShow(){
+            this.desciptionStatus = true
+        },
+        desciptionHide(){
+            this.desciptionStatus = false
+        },
+        // 收货人地址
+        selectAddress(){
+            
+        },
+        // 发布提交收快递申请
+        publish(){
+            this.$http({
+                url: API.Interface.receivePublish(),
+                method: 'post',
+                data: querystring.stringify({
+                    name: this.name,            // 收件人姓名
+                    mobile: this.phone,         // 收件人手机号
+                    addressCode: '',  // 省市县code
+                    addressTitle: '',   // 省市县名称
+                    address: '',	    // 收件人详细地址
+                    goodsList: '',      // 商品清单
+                    logistics: '',      // 物流公司信息
+                    weight: '',	        // 重量(单位：公斤)
+                    charges: ''         // 相应费用
+                }),
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            })
+        }
+    },
+    components: {
+
     }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .receive-container

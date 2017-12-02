@@ -1,13 +1,13 @@
 <template>
 <div class="receive-list">
     <div class="receive-type">
-        <div class="active">
+        <div :class="{'active' : receiveType == 1}" @click="selectReceiveType(1)">
             <span>我收的快递</span>
-            <i></i>
+            <b @click="showSlect(1)"><i></i></b>
         </div>
-        <div>
+        <div :class="{'active' : receiveType == 2}" @click="selectReceiveType(2)">
             <span>我发的快递</span>
-            <i></i>
+            <b @click="showSlect(2)"><i></i></b>
         </div>
     </div>
     <div class="update" v-show="updateShow">
@@ -15,9 +15,9 @@
         <b>哇~是最新的</b>
     </div>
     <div class="status">
-        <div class="select-type">已选："已完成状态"</div>
-        <div class="select-btn">
-            <b>状态：</b><span>未完成</span><span class="selected">已完成</span>
+        <div class="select-type">状态:{{selectState == 0 ? '全部' : selectState == 1 ? '未完成' : '已完成'}}</div>
+        <div class="select-btn" v-show="maskShow">
+            <div><b>状态：</b><span @click="selectStateMethod(0)"  :class="{'selected': selectState == 0}">全部</span><span @click="selectStateMethod(1)"  :class="{'selected': selectState == 1}">未完成</span><span @click="selectStateMethod(2)" :class="{'selected': selectState == 2}">已完成</span></div>
         </div>
     </div>
     <div class="list">
@@ -71,33 +71,92 @@
     <div class="no-more">
         <div><span>暂无更多内容</span></div>
     </div>
-    <router-view></router-view>
-    <div class="mask" v-show="maskShow"></div>
+    <router-view class="view-position"></router-view>
+    <div class="mask" @click="hideSelect" v-show="maskShow"></div>
 </div>
 </template>
 <script>
-    export default{
-        data(){
-            return {
-                updateShow: false,
-                maskShow: false
-            }
-        },
-        computed: {
-        },
-        mounted(){
-        },
-        methods: {
-            selectItem(id){
-                this.$router.push({
-                    path: `/receive-list/${id}`
-                })
-            }
-        },
-        components: {
+import storage from 'good-storage';
+import API from 'api/api';
+import {mapGetters,mapMutations} from 'vuex';
 
+const querystring = require('querystring');
+
+export default{
+    data(){
+        return {
+            updateShow: false,
+            maskShow: false,
+            receiveList: [],
+            selectState: 0,
+            receiveType: 1,
+            page: 1
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+        
+    },
+    methods: {
+        // 选择类型
+        selectReceiveType(type){
+            if(type == this.receiveType){
+                return;
+            }else{
+                this.receiveType = type;
+            }
+        },
+        // 选择状态
+        selectStateMethod(state){
+            this.selectState = state;
+        },
+        // 选择列表类型
+        showSlect(type){
+            if(type == this.receiveType){
+                this.maskShow = true;
+            }else{
+                this.receiveType = type;
+            }
+        },
+        // mask 隐藏
+        hideSelect(){
+            if(this.receiveType == 1){
+                this.myReceiveList(this.selectState, this.page)
+            }
+            this.maskShow = false;
+        },
+        // 选择查看详情
+        selectItem(id){
+            this.$router.push({
+                path: `/receive-list/${id}`
+            })
+        },
+        // 获取我收的快递列表
+        myReceiveList(state, page){
+            this.$http({
+                url: API.Interface.myReceiveList(state, page),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.receiveList = res.data.data;
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+    },
+    watch: {
+
     }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .receive-list
@@ -118,6 +177,8 @@
         text-align: center
         font-size: 0
         display: flex
+        position: relative
+        z-index: 100
         div
             flex: 1
             background: #fff
@@ -126,21 +187,25 @@
                 font-size: 13px
                 color: #333
                 vertical-align: middle
-            i
-                display: inline-block
-                width: 7px
-                height: 5px
-                margin-left: 8px
-                background: url('./arrow.png') no-repeat
-                background-size: 7px 5px
-                vertical-align: middle
+            b
+                padding: 10px 10px 10px 5px
+                i
+                    display: inline-block
+                    width: 7px
+                    height: 5px
+                    margin-left: 8px
+                    background: url('./arrow.png') no-repeat
+                    background-size: 7px 5px
+                    vertical-align: middle
         .active
             background: #fc5558
             span
                 color: #fff
-            i
-                background: url('./arrow-white.png') no-repeat
-                background-size: 7px 5px
+            b
+                padding: 10px 10px 10px 5px
+                i
+                    background: url('./arrow-white.png') no-repeat
+                    background-size: 7px 5px
     .update
         height: 44px
         text-align: center
@@ -158,6 +223,10 @@
             margin-top: 4px
             color: #87807f
     .status
+        position: relative
+        top: 0
+        left: 0
+        z-index: 100
         .select-type
             height: 20px
             line-height: 20px
@@ -166,29 +235,31 @@
             color: #87807f
             background: #fff
         .select-btn
-            height: 40px
-            line-height: 40px
-            font-size: 0
-            b
-                display: inline-block
-                font-size: 13px
-                color: #87807f
-                margin-left: 20px
-            span
-                display: inline-block
-                height: 16px
-                width: 56px
-                text-align: center
-                line-height: 16px
-                margin-left: 24px
-                font-size: 12px
-                border: 1px solid #87807f
-                border-radius: 10px
-                color: #87807f
-            .selected
-                color: #fff
-                background: #fc5558
-                border: 1px solid #fc5558
+            background: #f2eeed
+            div
+                height: 36px
+                line-height: 36px
+                font-size: 0
+                b
+                    display: inline-block
+                    font-size: 13px
+                    color: #87807f
+                    margin-left: 20px
+                span
+                    display: inline-block
+                    height: 16px
+                    width: 56px
+                    text-align: center
+                    line-height: 16px
+                    margin-left: 24px
+                    font-size: 12px
+                    border: 1px solid #87807f
+                    border-radius: 10px
+                    color: #87807f
+                .selected
+                    color: #fff
+                    background: #fc5558
+                    border: 1px solid #fc5558
     .list
         background: #fff
         ul
@@ -292,6 +363,11 @@
                 -moz-transform: translateX(-50%)
                 -o-transform: translateX(-50%)
                 transform: translateX(-50%)
+    
+    .view-position
+        position: absolute
+        top: 0
+        z-index: 200
     .mask
         position: absolute
         top: 0 
@@ -299,6 +375,5 @@
         left: 0
         right: 0
         background: rgba(0,0,0,0.5)
-        z-index: 100
-
+        z-index: 10
 </style>

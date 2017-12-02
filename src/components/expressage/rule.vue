@@ -37,26 +37,51 @@
 </div>
 </template>
 <script>
-    export default{
-        data(){
-            return {
-                selectedPage: 0
-            }
-        },
-        computed: {
-        },
-        mounted(){
-        },
-        methods: {
-            // 选择当前页
-            selectCurrentPage(page){
-                this.selectedPage = page;
-            },
-        },
-        components: {
+import storage from 'good-storage';
+import API from 'api/api';
+import {mapGetters} from 'vuex';
 
+const querystring = require('querystring');
+
+export default{
+    data(){
+        return {
+            selectedPage: 0,
+            payStandardList: []
+        }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+        this.receivePayList();
+    },
+    methods: {
+        // 选择当前页
+        selectCurrentPage(page){
+            this.selectedPage = page;
+        },
+        // 获取收费标准
+        receivePayList(){
+            this.$http({
+                url: API.Interface.receivePayList(),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.payStandardList = res.data.data
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
         }
     }
+}
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
 .rule-container

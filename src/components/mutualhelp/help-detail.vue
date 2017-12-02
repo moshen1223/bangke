@@ -46,7 +46,7 @@
         <div class="left">
             <input type="text" v-model="answer" placeholder="请输入回答"/>
         </div>
-        <div class="right" @click="submitAnswer">
+        <div class="right" @click.stop="submitAnswer">
             <span>提交</span>
         </div>
     </div>

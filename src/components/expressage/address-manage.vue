@@ -59,6 +59,9 @@
                 </li>
             </ul>
             <div class="set-default">设为默认地址</div>
+            <div class="attr-zTree-box">
+                <div class="ztree" id="attr_zTree"></div>
+            </div>
             <div class="save" @click="saveAddress">保存</div>
         </div>
     </div>
@@ -66,67 +69,117 @@
 <script>
 import storage from 'good-storage';
 import API from 'api/api';
+import city from './city'
 const querystring = require('querystring');
 
-    export default{
-        data(){
-            return {
-                addresslist: [],
-                deleteMask: false,
-                addAddressShow: false,
-                name: '',
-                telephone: '',
-                city: '',
-                adress: '',
-                code: ''
-            }
-        },
-        computed: {
-            login_info(){
-                return storage.session.get('login_info')
-            }
-        },
-        mounted(){
-            this.getUserAddress();
-        },
-        methods: {
-            // 获取收货地址列表
-            getUserAddress(){
-                this.$http({
-                    url: API.Interface.getUserAddress(),
-                    method: 'get',
-                    params: {
-                        page: 1
-                    },
-                    headers: {
-                        'timestamp':  API.timeStr,
-                        'access_token': this.login_info.access_token
-                    }
-                }).then((res) => {
-                    if(res.data.code == 200){
-                        this.addresslist= res.data.data;
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                })
-            },
-            showDeleteMask(){
-                this.deleteMask = true
-            },
-            hideDeleteMask(){
-                this.deleteMask = false
-            },
-            showAddressBox(){
-                this.addAddressShow = true
-            },
-            saveAddress(){
-                this.addAddressShow = false
-            }
-        },
-        components: {
-
+export default{
+    data(){
+        return {
+            addresslist: [],
+            deleteMask: false,
+            addAddressShow: false,
+            name: '',
+            telephone: '',
+            city: '',
+            adress: '',
+            code: ''
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        }
+    },
+    mounted(){
+        // this.getUserAddress();
+        // setTimeout(()=>{
+            this.drawZtree(city);
+        // }, 200)
+    },
+    methods: {
+        drawZtree(data){
+            let zTreeNodes = [];
+            data.forEach((item, index)=>{
+                if(!item.parentId){
+                    zTreeNodes.push({
+                        id: item.id,
+                        pId: 0,
+                        name: item.title
+                    })
+                }else if(item.parentId){
+                    zTreeNodes.push({
+                        id: item.id,
+                        pId: item.parentId,
+                        name: item.title
+                    })
+                }
+            });
+            let ztreeSetting = {
+                view: {
+                    addHoverDom: this.addHoverDom,
+                    removeHoverDom: this.removeHoverDom,
+                    selectedMulti: false,
+                    showLine: false,
+                    showIcon: false
+                },
+                edit: {
+                    enable: true,
+                    editNameSelectAll: true,
+                    showRemoveBtn: this.showRemoveBtn,
+                    showRenameBtn: this.showRenameBtn,
+                    showAddBtn: this.showAddBtn
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                },
+                callback: {
+                    beforeEditName: this.beforeEditName,
+                    beforeRemove: this.beforeRemove,
+                    beforeRename: this.beforeRename,
+                    onClick: this.zTreeOnClick
+                }
+            };
+            $.fn.zTree.init($("#attr_zTree"), ztreeSetting, zTreeNodes);
+        },
+        // 获取收货地址列表
+        getUserAddress(){
+            this.$http({
+                url: API.Interface.getUserAddress(),
+                method: 'get',
+                params: {
+                    page: 1
+                },
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.addresslist= res.data.data;
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        showDeleteMask(){
+            this.deleteMask = true
+        },
+        hideDeleteMask(){
+            this.deleteMask = false
+        },
+        showAddressBox(){
+            this.addAddressShow = true
+        },
+        saveAddress(){
+            this.addAddressShow = false
+        }
+    },
+    components: {
+
     }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .address-list
@@ -287,6 +340,7 @@ const querystring = require('querystring');
             font-size: 13px
             color: #333
             background: #fff
+        
         .save
             height: 48px
             width: 100%

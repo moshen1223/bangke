@@ -3,11 +3,11 @@
     <div class="help-type">
         <div :class="{'active' : helpRange == 1}" @click="selectHelpRange(1)">
             <span>本校互助</span>
-            <b @click="showSlect"><i></i></b>
+            <b @click="showSlect(1)"><i></i></b>
         </div>
         <div :class="{'active' : helpRange == 2}" @click="selectHelpRange(2)">
             <span>其他互助</span>
-            <b @click="showSlect"><i></i></b>
+            <b @click="showSlect(2)"><i></i></b>
         </div>
     </div>
     <div class="status">
@@ -75,7 +75,11 @@ export default{
     methods: {
         // 选择互助范围
         selectHelpRange(type){
-            this.helpRange = type;
+            if(type == this.helpRange){
+                return;
+            }else{
+                this.helpRange = type;
+            }
         },
         // 选择状态
         selectStateMethod(state){
@@ -86,8 +90,12 @@ export default{
             this.selectType = type;
         },
         // 选择列表类型
-        showSlect(){
-            this.maskShow = true;
+        showSlect(type){
+            if(type == this.helpRange){
+                this.maskShow = true;
+            }else{
+                this.helpRange = type;
+            }
         },
         // mask 隐藏
         hideSelect(){

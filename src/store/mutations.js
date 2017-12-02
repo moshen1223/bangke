@@ -9,6 +9,9 @@ const mutations = {
     },
     [types.SET_MUTUALID](state, mutualId){
         state.mutualId = mutualId;
+    },
+    [types.SET_RECEIVEID](state, receiveId){
+        state.receiveId = receiveId;
     }
 }
 
