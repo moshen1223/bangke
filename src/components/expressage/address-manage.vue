@@ -242,7 +242,7 @@ export default{
                 }).catch((error)=>{
                     console.log(error);
                 });
-            }else if(saveType == 2){
+            }else if(this.saveType == 2){
                 this.$http({
                     url: API.Interface.updateUserAddress(),
                     method: 'PUT',
