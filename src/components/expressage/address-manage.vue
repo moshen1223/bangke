@@ -98,7 +98,7 @@ export default{
         }
     },
     mounted(){
-        // this.getUserAddress();
+        this.getUserAddress();
         this.drawZtree(city);
     },
     methods: {
@@ -153,7 +153,6 @@ export default{
         },
         selectDefault(){
             this.defaultAdress == 0 ? this.defaultAdress = 1 : this.defaultAdress = 0;
-            alert(this.defaultAdress)
         },
         // 添加收货地址
         saveAddress(){
@@ -202,6 +201,13 @@ export default{
                         type: 'success'
                     });
                     this.addAddressShow = false;
+                    this.name = '';
+                    this.telephone = '';
+                    this.code = '';
+                    this.cityId = '';
+                    this.city = '';
+                    this.adress = '';
+                    this.defaultAdress = 0;
                 }
             }).catch((error)=>{
                 console.log(error);
@@ -211,10 +217,10 @@ export default{
         getUserAddress(){
             this.$http({
                 url: API.Interface.getUserAddress(),
-                method: 'get',
-                params: {
+                method: 'post',
+                data: querystring.stringify({
                     page: 1
-                },
+                }),
                 headers: {
                     'timestamp':  API.timeStr,
                     'access_token': this.login_info.access_token
