@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="addAddress" v-show="addAddressShow">
-            <ul>
+            <ul class="add-item">
                 <li>
                     <div class="left">收货人</div>
                     <div class="right">
@@ -42,7 +42,7 @@
                 <li>
                     <div class="left">所在地区</div>
                     <div class="right">
-                        <el-input v-model="city" placeholder="请选择省市区"></el-input>
+                        <el-input @focus="selectCity" :readonly="true" v-model="city" placeholder="请选择省市区"></el-input>
                     </div>
                 </li>
                 <li>
@@ -59,10 +59,11 @@
                 </li>
             </ul>
             <div class="set-default">设为默认地址</div>
-            <div class="attr-zTree-box">
+            <div class="attr-zTree-box" v-show = "cityShow">
                 <div class="ztree" id="attr_zTree"></div>
             </div>
             <div class="save" @click="saveAddress">保存</div>
+            <div class="citymask" v-show = "cityShow"></div>
         </div>
     </div>
 </template>
@@ -77,10 +78,12 @@ export default{
         return {
             addresslist: [],
             deleteMask: false,
+            cityShow: false,
             addAddressShow: false,
             name: '',
             telephone: '',
             city: '',
+            cityId : '',
             adress: '',
             code: ''
         }
@@ -92,11 +95,14 @@ export default{
     },
     mounted(){
         // this.getUserAddress();
-        // setTimeout(()=>{
-            this.drawZtree(city);
-        // }, 200)
+        this.drawZtree(city);
     },
     methods: {
+        // 选择城市弹框
+        selectCity(){
+            this.cityShow = true;
+        },
+        // 画出城市树
         drawZtree(data){
             let zTreeNodes = [];
             data.forEach((item, index)=>{
@@ -116,18 +122,9 @@ export default{
             });
             let ztreeSetting = {
                 view: {
-                    addHoverDom: this.addHoverDom,
-                    removeHoverDom: this.removeHoverDom,
                     selectedMulti: false,
                     showLine: false,
                     showIcon: false
-                },
-                edit: {
-                    enable: true,
-                    editNameSelectAll: true,
-                    showRemoveBtn: this.showRemoveBtn,
-                    showRenameBtn: this.showRenameBtn,
-                    showAddBtn: this.showAddBtn
                 },
                 data: {
                     simpleData: {
@@ -135,13 +132,20 @@ export default{
                     }
                 },
                 callback: {
-                    beforeEditName: this.beforeEditName,
-                    beforeRemove: this.beforeRemove,
-                    beforeRename: this.beforeRename,
                     onClick: this.zTreeOnClick
                 }
             };
             $.fn.zTree.init($("#attr_zTree"), ztreeSetting, zTreeNodes);
+        },
+        zTreeOnClick(event, zTreeID, zTreeNode){
+            if(!zTreeNode.children){
+                this.city = zTreeNode.name;
+                this.cityId = zTreeNode.id;
+                this.cityShow = false;
+            }else{
+                var zTree = $.fn.zTree.getZTreeObj("attr_zTree");
+			    zTree.expandNode(zTreeNode);
+            };
         },
         // 获取收货地址列表
         getUserAddress(){
@@ -308,7 +312,7 @@ export default{
         right: 0
         z-index: 200
         background: #f1efed
-        ul
+        .add-item
             margin-top: 12px
             padding-left: 12px
             background: #fff
@@ -340,7 +344,22 @@ export default{
             font-size: 13px
             color: #333
             background: #fff
-        
+        .attr-zTree-box
+            border-radius: 8px
+            height: 340px
+            overflow: scroll
+            position: absolute
+            top: 50%
+            left: 20px
+            right: 20px
+            -webkit-transform: translateY(-50%)
+            z-index: 200
+            background: #fff
+            li
+                line-height: 22px
+                margin-bottom: 5px
+                a
+                    height: 22px
         .save
             height: 48px
             width: 100%
@@ -352,4 +371,14 @@ export default{
             position: fixed
             left: 0
             bottom: 0
+        .citymask
+            position: absolute
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            z-index: 100
+            background: rgba(0,0,0, 0.5) 
+
+
 </style>
