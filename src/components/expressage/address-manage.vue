@@ -3,13 +3,13 @@
         <ul>
             <li v-for="(item, index) in addresslist" :key="index">
                 <div class="info">
-                    <span>老张头</span>
-                    <b>185****3687</b>
+                    <span>{{item.name}}</span>
+                    <b>{{item.phoneNumber}}</b>
                     <i></i>
                 </div>
                 <p class="disc">{{item.address}}</p>
                 <div class="opa">
-                    <span :class="{'selected':item.isDefault}"></span>
+                    <span :class="{'selected':item.isdefault}"></span>
                     <b @click="showDeleteMask(item.id)"></b>
                 </div>
             </li>
@@ -21,8 +21,8 @@
         <div class="delbox" v-show="deleteMask">
             <p>确定要进行删除吗</p>
             <div>
-                <span>取消</span>
-                <span>确定</span>
+                <span @click="hideDeleteMask">取消</span>
+                <span @click="deleteAddress">确定</span>
             </div>
         </div>
         <div class="addAddress" v-show="addAddressShow">
@@ -89,7 +89,8 @@ export default{
             cityId : '',
             adress: '',
             code: '',
-            defaultAdress: 0
+            defaultAdress: 0,
+            addressID: ''
         }
     },
     computed: {
@@ -201,6 +202,7 @@ export default{
                         type: 'success'
                     });
                     this.addAddressShow = false;
+                    this.getUserAddress();
                     this.name = '';
                     this.telephone = '';
                     this.code = '';
@@ -233,11 +235,31 @@ export default{
                 console.log(error);
             })
         },
-        showDeleteMask(){
-            this.deleteMask = true
+        showDeleteMask(id){
+            this.deleteMask = true;
+            thius.addressID = id;
         },
         hideDeleteMask(){
-            this.deleteMask = false
+            this.deleteMask = false;
+            this.addressID = '';
+        },
+        deleteAddress(){
+            this.$http({
+                url: API.Interface.deleteUserAddress(this.addressID),
+                method: 'DELETE',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.deleteMask = false;
+                    this.addressID = '';
+                    this.getUserAddress();
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
         },
         showAddressBox(){
             this.addAddressShow = true
