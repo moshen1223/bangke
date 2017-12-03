@@ -221,9 +221,9 @@ export default{
                 alert('请完善您的专业!');
                 return;
             }
-            let reg = /^1[3578]\d{9}$/img
+            let reg = /^1[3578]\d{9}$/img;
             if(!reg.test(this.phone)){
-                alert('您输入的手机号!');
+                alert('请输入正确格式的手机号!');
                 return;
             }
             if(!this.nickname){

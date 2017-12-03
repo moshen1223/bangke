@@ -58,7 +58,9 @@
                     </div>
                 </li>
             </ul>
-            <div class="set-default">设为默认地址</div>
+            <div class="set-default">
+                <span @click="selectDefault" :class="{'actived': defaultAdress == 1}">设为默认地址</span>
+            </div>
             <div class="attr-zTree-box" v-show = "cityShow">
                 <div class="ztree" id="attr_zTree"></div>
             </div>
@@ -70,7 +72,8 @@
 <script>
 import storage from 'good-storage';
 import API from 'api/api';
-import city from './city'
+import city from './city';
+import {mapGetters, mapMutations} from 'vuex';
 const querystring = require('querystring');
 
 export default{
@@ -85,7 +88,8 @@ export default{
             city: '',
             cityId : '',
             adress: '',
-            code: ''
+            code: '',
+            defaultAdress: 0
         }
     },
     computed: {
@@ -147,6 +151,62 @@ export default{
 			    zTree.expandNode(zTreeNode);
             };
         },
+        selectDefault(){
+            this.defaultAdress == 0 ? this.defaultAdress = 1 : this.defaultAdress = 0;
+            alert(this.defaultAdress)
+        },
+        // 添加收货地址
+        saveAddress(){
+            let regTel = /^1[3578]\d{9}$/img;
+            if(!regTel.test(this.telephone)){
+                alert('请输入正确格式的手机号!');
+                return;
+            }
+            if(!this.name){
+                alert('昵称不能为空!');
+                return;
+            }
+            let regCode = /^\d{6}$/img;
+            if(!regCode.test(this.code)){
+                alert('请输入正确格式的邮政编码!');
+                return;
+            }
+            if(!this.cityId){
+                alert('请选择城市!');
+                return;
+            }
+            if(!this.adress){
+                alert('收货详细地址不能为空!');
+                return;
+            }
+            this.$http({
+                url: API.Interface.addUserAddress(),
+                method: 'post',
+                data: querystring.stringify({
+                    name: this.name,
+                    phoneNumber: this.telephone,
+                    postCode: this.code,
+                    code: this.cityId,
+                    title: this.city,
+                    content: this.adress,
+                    isDefault: this.defaultAdress == 0 ? 'false' : true
+                }),
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        message: '恭喜你，添加成功',
+                        type: 'success'
+                    });
+                    this.addAddressShow = false;
+                }
+            }).catch((error)=>{
+                console.log(error);
+            });
+        },
         // 获取收货地址列表
         getUserAddress(){
             this.$http({
@@ -175,9 +235,6 @@ export default{
         },
         showAddressBox(){
             this.addAddressShow = true
-        },
-        saveAddress(){
-            this.addAddressShow = false
         }
     },
     components: {
@@ -341,9 +398,16 @@ export default{
             height: 36px
             line-height: 36px
             text-align: center
-            font-size: 13px
-            color: #333
-            background: #fff
+            span 
+                font-size: 13px
+                color: #333
+                background: #fff
+                display:inline-block
+                width: 100%
+                height: 100%
+            .actived
+                background: #fc5558
+                color: #fff
         .attr-zTree-box
             border-radius: 8px
             height: 340px
