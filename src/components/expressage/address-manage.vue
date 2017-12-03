@@ -217,10 +217,10 @@ export default{
         getUserAddress(){
             this.$http({
                 url: API.Interface.getUserAddress(),
-                method: 'post',
-                data: querystring.stringify({
+                method: 'get',
+                params: {
                     page: 1
-                }),
+                },
                 headers: {
                     'timestamp':  API.timeStr,
                     'access_token': this.login_info.access_token
