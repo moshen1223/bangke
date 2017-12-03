@@ -5,16 +5,16 @@
                 <div class="info">
                     <span>{{item.name}}</span>
                     <b>{{item.phoneNumber}}</b>
-                    <i></i>
+                    <i @click="editAddress(item)"></i>
                 </div>
                 <p class="disc">{{item.address}}</p>
                 <div class="opa">
-                    <span :class="{'selected':item.isdefault}"></span>
+                    <span :class="{'selected':item.isdefault}" @click="changeDefaultAddress(item.id, item.isdefault)"></span>
                     <b @click="showDeleteMask(item.id)"></b>
                 </div>
             </li>
         </ul>
-        <div class="commit" @click="showAddressBox">
+        <div class="commit" @click="showAddressBox(1)">
             <span>添加新地址</span>
         </div>
         <div class="mask" @click="hideDeleteMask" v-show="deleteMask"></div>
@@ -90,7 +90,8 @@ export default{
             adress: '',
             code: '',
             defaultAdress: 0,
-            addressID: ''
+            addressID: '',
+            saveType: 1
         }
     },
     computed: {
@@ -152,8 +153,33 @@ export default{
 			    zTree.expandNode(zTreeNode);
             };
         },
+        // 添加新地址时选择是否设置为默认地址
         selectDefault(){
             this.defaultAdress == 0 ? this.defaultAdress = 1 : this.defaultAdress = 0;
+        },
+        // 改变默认
+        changeDefaultAddress(id, isdefault){
+            if(isdefault){
+                return
+            }
+            this.$http({
+                url: API.Interface.setDefaultUserAddress(),
+                method: 'PUT',
+                data: querystring.stringify({
+                        ids: id,
+                        isDefault: true
+                }),
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.getUserAddress();
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
         },
         // 添加收货地址
         saveAddress(){
@@ -179,41 +205,82 @@ export default{
                 alert('收货详细地址不能为空!');
                 return;
             }
-            this.$http({
-                url: API.Interface.addUserAddress(),
-                method: 'post',
-                data: querystring.stringify({
-                    name: this.name,
-                    phoneNumber: this.telephone,
-                    postCode: this.code,
-                    code: this.cityId,
-                    title: this.city,
-                    content: this.adress,
-                    isDefault: this.defaultAdress == 0 ? 'false' : true
-                }),
-                headers: {
-                    'timestamp':  API.timeStr,
-                    'access_token': this.login_info.access_token
-                }
-            }).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '恭喜你，添加成功',
-                        type: 'success'
-                    });
-                    this.addAddressShow = false;
-                    this.getUserAddress();
-                    this.name = '';
-                    this.telephone = '';
-                    this.code = '';
-                    this.cityId = '';
-                    this.city = '';
-                    this.adress = '';
-                    this.defaultAdress = 0;
-                }
-            }).catch((error)=>{
-                console.log(error);
-            });
+            // 1. 添加 2. 修改
+            if(this.saveType == 1){
+                this.$http({
+                    url: API.Interface.addUserAddress(),
+                    method: 'post',
+                    data: querystring.stringify({
+                        name: this.name,
+                        phoneNumber: this.telephone,
+                        postCode: this.code,
+                        code: this.cityId,
+                        title: this.city,
+                        content: this.adress,
+                        isDefault: this.defaultAdress == 0 ? 'false' : true
+                    }),
+                    headers: {
+                        'timestamp':  API.timeStr,
+                        'access_token': this.login_info.access_token
+                    }
+                }).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '恭喜你，添加成功',
+                            type: 'success'
+                        });
+                        this.addAddressShow = false;
+                        this.getUserAddress();
+                        this.name = '';
+                        this.telephone = '';
+                        this.code = '';
+                        this.cityId = '';
+                        this.city = '';
+                        this.adress = '';
+                        this.defaultAdress = 0;
+                    }
+                }).catch((error)=>{
+                    console.log(error);
+                });
+            }else if(saveType == 2){
+                this.$http({
+                    url: API.Interface.updateUserAddress(),
+                    method: 'PUT',
+                    data: querystring.stringify({
+                        id: this.addressID,
+                        name: this.name,
+                        phoneNumber: this.telephone,
+                        postCode: this.code,
+                        code: this.cityId,
+                        title: this.city,
+                        content: this.adress,
+                        isDefault: this.defaultAdress == 0 ? 'false' : true
+                    }),
+                    headers: {
+                        'timestamp':  API.timeStr,
+                        'access_token': this.login_info.access_token
+                    }
+                }).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '恭喜你，修改成功',
+                            type: 'success'
+                        });
+                        this.addAddressShow = false;
+                        this.getUserAddress();
+                        this.addressID = '';
+                        this.name = '';
+                        this.telephone = '';
+                        this.code = '';
+                        this.cityId = '';
+                        this.city = '';
+                        this.adress = '';
+                        this.defaultAdress = 0;
+                    }
+                }).catch((error)=>{
+                    console.log(error);
+                });
+            }
         },
         // 获取收货地址列表
         getUserAddress(){
@@ -235,14 +302,30 @@ export default{
                 console.log(error);
             })
         },
+        // 展示删除弹层
         showDeleteMask(id){
             this.deleteMask = true;
-            thius.addressID = id;
+            this.addressID = id;
         },
+        // 点击取消隐藏删除弹性
         hideDeleteMask(){
             this.deleteMask = false;
             this.addressID = '';
         },
+        // 编辑该条目
+        editAddress(item){
+            this.addAddressShow = true;
+            this.name = item.name;
+            this.telephone = item.phoneNumber;
+            this.code = item.postCode;
+            this.cityId = item.code;
+            this.city = item.title;
+            this.adress = item.address;
+            this.defaultAdress = item.isDefault;
+            this.addressID = item.id;
+            this.saveType = 2;
+        },
+        // 删除该条目
         deleteAddress(){
             this.$http({
                 url: API.Interface.deleteUserAddress(this.addressID),
@@ -261,8 +344,10 @@ export default{
                 console.log(error);
             })
         },
+        // 添加收货地址
         showAddressBox(){
-            this.addAddressShow = true
+            this.addAddressShow = true;
+            this.saveType = 1;
         }
     },
     components: {
