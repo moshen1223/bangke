@@ -10,9 +10,7 @@
             <p>
                 服务介绍：校园帮客快递代取服务是结合学生实际情况所推出快递送上门的服务，旨在为学生提供更灵活、更便捷的服务。也为高校一些困难学生提供勤工俭学和锻炼能力的机会。<br>
                 收费标准：<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;标准件（0--2公斤）1元<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;中等件（2--5公斤）2元<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;大件(5公斤以上)   3元<br>
+                <span v-for="(item, index) in payStandardList" :key="index">&nbsp;&nbsp;&nbsp;&nbsp;{{item.title}}（{{item.startHeight}}--{{item.endHeight}}公斤）{{item.money}}元<br></span>
                 凭良心选择快递大小，如有严重超标，双倍出费。<br>
                 代取人员均有本校学生完成，保证信息安全。<br>
                 代取快递如有破损，工作人员会及时与您联系。<br>

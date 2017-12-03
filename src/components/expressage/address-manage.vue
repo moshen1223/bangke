@@ -321,7 +321,7 @@ export default{
             this.cityId = item.code;
             this.city = item.title;
             this.adress = item.address;
-            this.defaultAdress = item.isDefault;
+            this.defaultAdress = item.isdefault;
             this.addressID = item.id;
             this.saveType = 2;
         },
