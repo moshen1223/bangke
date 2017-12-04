@@ -234,33 +234,19 @@ export default{
                 alert('请选择头像!');
                 return;
             }
-            this.setUserInfo({
-                id: this.userInfo.id,
-                name: this.nickname,
-                head: this.avatorURL,
-                sex: this.sex,
-                phone: this.phone,
-                schoolID: this.schoolID,
-                schoolName: this.schoolName,
-                specialityId: this.departmentID,
-                specialityName: this.departmentName
-            })
-        },
-        // 设置个人信息
-        setUserInfo(options){
             this.$http({
                 url: API.Interface.completeUserInfo(),
                 method: 'post',
                 data: querystring.stringify({
-                    id: options.id,
-                    name: options.name,
-                    headPictureUrl: options.head,
-                    sex: options.sex,
-                    phoneNumber: options.phone,
-                    schoolId: options.schoolID,
-                    schoolName: options.schoolName,
-                    schoolSpecialityId: options.specialityId,
-                    schoolSpecialityName: options.specialityName
+                    id: this.userInfo.id,
+                    name: this.nickname,
+                    headPictureUrl: this.avatorURL,
+                    sex: this.sex,
+                    phoneNumber: this.phone,
+                    schoolId: this.schoolID,
+                    schoolName: this.schoolName,
+                    schoolSpecialityId: this.departmentID,
+                    schoolSpecialityName: this.departmentName
                 }),
                 headers: {
                     'timestamp':  API.timeStr,
