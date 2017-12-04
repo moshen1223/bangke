@@ -143,6 +143,7 @@ export default{
                 }
             }).then((res) => {
                 if(res.data.code == 200){
+                    alert(1)
                     this.payStandardList = res.data.data
                     this.payStandardList.forEach((item)=>{
                         this.options.push({
@@ -150,6 +151,7 @@ export default{
                             label: item.title
                         })
                     })
+                    console.log(this.options)
                 }
             }).catch((error) => {
                 console.log(error);
