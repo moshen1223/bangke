@@ -145,7 +145,7 @@ export default{
                 if(res.data.code == 200){
                     this.payStandardList = res.data.data
                     this.payStandardList.forEach((item)=>{
-                        this.options({
+                        this.options.push({
                             value: item.id,
                             label: item.title
                         })
