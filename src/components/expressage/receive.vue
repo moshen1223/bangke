@@ -65,7 +65,7 @@
         </ul>
     </div>
     <div class="commit-btn">
-        <router-link tag="div" @click="publish">提交取送快递请求</router-link>
+        <div @click="publish">提交取送快递请求</div>
     </div>
     <div class="footer">
       <router-link tag="div" class="home" to="/home">

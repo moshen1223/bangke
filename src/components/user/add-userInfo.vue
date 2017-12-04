@@ -123,8 +123,8 @@ export default{
                 url: API.Interface.getSchoolList(name,page),
                 method: 'get',
                 headers: {
-                'timestamp':  API.timeStr,
-                'access_token': this.login_info.access_token
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
                 }
             }).then((res) => {
                 if(res.data.code == 200){
@@ -297,6 +297,14 @@ export default{
             setCompletepage : 'SET_COMPLETEPAGE',
             setUserInfo : 'SET_USERINFO'
         })
+    },
+    watch: {
+        schoolID(){
+            this.departments = [];
+            this.departmentName = '';
+            this.departmentID = '';
+            this.getMagorList(this.schoolID, '', 1);
+        }
     }
 }
 </script>
@@ -323,7 +331,7 @@ export default{
             line-height: 28px
             .el-input__inner
                 padding: 0 10px
-                height: 28px
+                height: 27px
                 color: #333
                 border: none
             .left
