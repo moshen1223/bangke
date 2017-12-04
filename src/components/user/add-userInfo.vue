@@ -106,7 +106,7 @@ export default{
         ...mapGetters(['userInfo'])
     },
     mounted(){
-
+        this.getSchoolList('', 1);
     },
     methods:{
         // 学校搜索

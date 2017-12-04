@@ -72,63 +72,75 @@
 </div>
 </template>
 <script>
-    import storage from 'good-storage';
-    import Bangke from 'api/api';
-    export default{
-        data(){
-            return {
-                bannerList: [],
-                selectedPage: 1
-            }
-        },
-        computed: {
-            login_info(){
-                return storage.session.get('login_info')
-            }
-        },
-        mounted(){
-            setTimeout(()=>{
-                if(this.login_info){
-                    this.getBanner();
-                }
-            }, 0)
-        },
-        methods: {
-            setHeight(){
-                if(!this.$refs.container.children[0].style.height){
-                    this.$refs.container.children[0].style.height = parseInt((this.$refs.container.children[0].children[0].children[0].children[0].height)/2) + 'px';
-                }
-            },
-            getBanner(){
-                this.$http({
-                    url: Bangke.Interface.getBannerPic('INDEXHEAD001'),
-                    method: 'get',
-                    headers: {
-                        'timestamp':  Bangke.timeStr,
-                        'access_token': this.login_info.access_token
-                    }
-                }).then((res) => {
-                        if(res.data.code == 200 && res.data.message == "获取相应位置轮播图列表成功"){
-                            this.bannerList = res.data.data;
-                            setTimeout(()=>{
-                                this.$nextTick(()=>{
-                                    this.setHeight();
-                                })
-                            },20)
-                        }
-                    }).catch((error) => {
-                        console.log(error);
-                    })
-            },
-            // 选择当前页
-            selectCurrentPage(page){
-            this.selectedPage = page;
-            },
-        },
-        components: {
+import storage from 'good-storage';
+import API from 'api/api';
+import {mapGetters, mapMutations} from 'vuex';
 
+export default{
+    data(){
+        return {
+            bannerList: [],
+            selectedPage: 1
         }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        },
+        ...mapGetters(['userInfo'])
+    },
+    mounted(){
+        setTimeout(()=>{
+            if(this.login_info){
+                this.getBanner();
+            }
+        }, 0)
+        if(this.userInfo){
+            if(!this.userInfo.isFristBasicInfo){
+                this.setCompletepage(false)
+            }
+        }
+        
+    },
+    methods: {
+        setHeight(){
+            if(!this.$refs.container.children[0].style.height){
+                this.$refs.container.children[0].style.height = parseInt((this.$refs.container.children[0].children[0].children[0].children[0].height)/2) + 'px';
+            }
+        },
+        getBanner(){
+            this.$http({
+                url: API.Interface.getBannerPic('INDEXHEAD001'),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                    if(res.data.code == 200 && res.data.message == "获取相应位置轮播图列表成功"){
+                        this.bannerList = res.data.data;
+                        setTimeout(()=>{
+                            this.$nextTick(()=>{
+                                this.setHeight();
+                            })
+                        },20)
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                })
+        },
+        // 选择当前页
+        selectCurrentPage(page){
+            this.selectedPage = page;
+        },
+        ...mapMutations({
+            setCompletepage : 'SET_COMPLETEPAGE',
+        })
+    },
+    components: {
+
     }
+}
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
 .home-container

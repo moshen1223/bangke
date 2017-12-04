@@ -61,7 +61,7 @@
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 
 export default{
     data(){
@@ -74,11 +74,21 @@ export default{
             'userInfo'
         ])
     },
+    mounted(){
+        if(this.userInfo){
+            if(!this.userInfo.isFristBasicInfo){
+                this.setCompletepage(false);
+            }
+        }
+    },
     methods:{
         // 选择当前页
         selectCurrentPage(page){
             this.selectedPage = page;
         },
+        ...mapMutations({
+            setCompletepage : 'SET_COMPLETEPAGE'
+        })
     }
 }
 </script>

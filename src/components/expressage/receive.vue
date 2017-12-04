@@ -16,7 +16,7 @@
             </li>
             <li>
                 <div class="tit">收货人地址</div>
-                <div class="con" @click="selectAddress()">
+                <div class="con" @click="selectAddress">
                     <el-input :disabled="true" v-model="address" suffix-icon="el-icon-arrow-right" placeholder="默认地址"></el-input>
                 </div>
             </li>
@@ -45,7 +45,7 @@
             <li class="weight">
                 <div class="tit">货物重量</div>
                 <div class="con">
-                    <el-select v-model="weight" placeholder="请选择货物重量">
+                    <el-select v-model="weight" placeholder="请选择货物重量" @change="weightChange">
                         <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -59,13 +59,13 @@
             <li class="cost">
                 <div class="tit">费用</div>
                 <div class="con">
-                    <p class="cost-text">费用根据重量信息实时显示</p>
+                    <p class="cost-text">{{charges}}</p>
                 </div>
             </li>
         </ul>
     </div>
     <div class="commit-btn">
-        <router-link tag="div" to="/receive-list">提交取送快递请求</router-link>
+        <router-link tag="div" @click="publish">提交取送快递请求</router-link>
     </div>
     <div class="footer">
       <router-link tag="div" class="home" to="/home">
@@ -100,19 +100,15 @@ export default{
             name: '',
             phone: '',
             address: '',
+            code: '',
+            detailAddress: '',
             inventory: '',
             logistics: '',
             weight: '',
-            options: [{
-                value: '选项1',
-                label: '1kg以内'
-                }, {
-                value: '选项2',
-                label: '1kg~3kg'
-                }, {
-                value: '选项5',
-                label: '3kg以上'
-            }],
+            weightText: '',
+            charges: '',
+            options: [],
+            payStandardList: [],
             desciptionStatus: false
         }
     },
@@ -122,6 +118,8 @@ export default{
         }
     },
     mounted(){
+        this.getDefaultAddress();
+        this.receivePayList();
     },
     methods: {
         // 选择当前页
@@ -134,9 +132,65 @@ export default{
         desciptionHide(){
             this.desciptionStatus = false
         },
+        // 获取收费标准
+        receivePayList(){
+            this.$http({
+                url: API.Interface.receivePayList(),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.payStandardList = res.data.data
+                    this.payStandardList.forEach((item)=>{
+                        this.options({
+                            value: item.id,
+                            label: item.title
+                        })
+                    })
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        // 获取默认收货地址
+        getDefaultAddress(){
+            this.$http({
+                url: API.Interface.getDefaultUserAddress(),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res)=>{
+                if(res.data.code == 200){
+                    let data = res.data.data;
+                    this.name = data.name;
+                    this.phone = data.phoneNumber;
+                    this.address = data.title;
+                    this.code = data.code;
+                    this.detailAddress = data.address;
+                }
+            }).catch((error)=>{
+                console.log(error)
+            });
+        },
         // 收货人地址
         selectAddress(){
-            
+            this.$router.push({
+                path: `/address-manage`
+            })
+        },
+        // 重量改变
+        weightChange(){
+            this.payStandardList.forEach((item)=>{
+                if(item.id == this.weight){
+                    this.weightText = item.title;
+                    this.charges = item.money;
+                }
+            })
         },
         // 发布提交收快递申请
         publish(){
@@ -146,18 +200,22 @@ export default{
                 data: querystring.stringify({
                     name: this.name,            // 收件人姓名
                     mobile: this.phone,         // 收件人手机号
-                    addressCode: '',  // 省市县code
-                    addressTitle: '',   // 省市县名称
-                    address: '',	    // 收件人详细地址
-                    goodsList: '',      // 商品清单
-                    logistics: '',      // 物流公司信息
-                    weight: '',	        // 重量(单位：公斤)
-                    charges: ''         // 相应费用
+                    addressCode: this.code,  // 省市县code
+                    addressTitle: this.address,   // 省市县名称
+                    address: this.detailAddress,	    // 收件人详细地址
+                    goodsList: this.inventory,      // 商品清单
+                    logistics: this.logistics,      // 物流公司信息
+                    weight: this.weightText,	        // 重量(单位：公斤)
+                    charges: this.charges         // 相应费用
                 }),
                 headers: {
                     'timestamp':  API.timeStr,
                     'access_token': this.login_info.access_token
                 }
+            }).then((res)=>{
+                console.log(res)
+            }).catch((error)=>{
+                console.log(error)
             })
         }
     },
