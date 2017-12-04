@@ -216,7 +216,11 @@ export default{
                     'access_token': this.login_info.access_token
                 }
             }).then((res)=>{
-                console.log(res)
+                if(res.data.code == 200){
+                    this.$router.push({
+                        path: '/receive-list'
+                    })
+                }
             }).catch((error)=>{
                 console.log(error)
             })
