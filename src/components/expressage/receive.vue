@@ -17,7 +17,7 @@
             <li>
                 <div class="tit">收货人地址</div>
                 <div class="con" @click="selectAddress">
-                    <el-input :disabled="true" v-model="address" suffix-icon="el-icon-arrow-right" placeholder="默认地址"></el-input>
+                    <el-input :disabled="true" v-model="addressDetail" suffix-icon="el-icon-arrow-right" placeholder="默认地址"></el-input>
                 </div>
             </li>
             <li class="msg">
@@ -59,7 +59,7 @@
             <li class="cost">
                 <div class="tit">费用</div>
                 <div class="con">
-                    <p class="cost-text">{{charges}}</p>
+                    <p class="cost-text">{{charges}}元</p>
                 </div>
             </li>
         </ul>
@@ -99,6 +99,7 @@ export default{
             selectedPage: 0,
             name: '',
             phone: '',
+            addressDetail: '',
             address: '',
             code: '',
             detailAddress: '',
@@ -174,6 +175,7 @@ export default{
                     this.address = data.title;
                     this.code = data.code;
                     this.detailAddress = data.address;
+                    this.addressDetail = `${data.titl}/${data.address}`;
                 }
             }).catch((error)=>{
                 console.log(error)
