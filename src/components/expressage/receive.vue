@@ -144,7 +144,6 @@ export default{
                 }
             }).then((res) => {
                 if(res.data.code == 200){
-                    alert(1)
                     this.payStandardList = res.data.data
                     this.payStandardList.forEach((item)=>{
                         this.options.push({
@@ -175,7 +174,7 @@ export default{
                     this.address = data.title;
                     this.code = data.code;
                     this.detailAddress = data.address;
-                    this.addressDetail = `${data.titl}/${data.address}`;
+                    this.addressDetail = `${data.title}/${data.address}`;
                 }
             }).catch((error)=>{
                 console.log(error)
@@ -191,7 +190,7 @@ export default{
         weightChange(){
             this.payStandardList.forEach((item)=>{
                 if(item.id == this.weight){
-                    this.weightText = item.title;
+                    this.weightText = item.endHeight;
                     this.charges = item.money;
                 }
             })
