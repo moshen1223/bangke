@@ -79,6 +79,12 @@ const AddressManage = (resolve) => {
   })
 }
 
+const CommingSoon =  (resolve) => {
+  import('components/common/comming-soon').then((module) => {
+    resolve(module)
+  })
+}
+
 export default new Router({
   routes: [{
       path: '/user',
@@ -128,6 +134,9 @@ export default new Router({
           component: ReceiveDetail
         }
       ]
+    },{
+      path: '/comming-soon',
+      component: CommingSoon,
     }
   ]
 })

@@ -35,22 +35,26 @@
         </div>
         <div class="nav-item">
             <div class="item-left">
-                <div class="text">
-                    <h6>旅游</h6>
-                    <p>出去玩，来找我</p>
-                </div>
-                <div class="pic">
-                    <img src="./travel.png">
-                </div>
+                <router-link tag="div" to="/comming-soon">
+                    <div class="text">
+                        <h6>旅游</h6>
+                        <p>出去玩，来找我</p>
+                    </div>
+                    <div class="pic">
+                        <img src="./travel.png">
+                    </div>
+                </router-link>
             </div>
             <div class="item-right">
-                <div class="text">
-                    <h6>兼职</h6>
-                    <p>找工作，来找我</p>
-                </div>
-                <div class="pic">
-                    <img src="./job.png">
-                </div>
+                <router-link tag="div" to="/comming-soon">
+                    <div class="text">
+                        <h6>兼职</h6>
+                        <p>找工作，来找我</p>
+                    </div>
+                    <div class="pic">
+                        <img src="./job.png">
+                    </div>
+                </router-link>
             </div>
         </div>
     </div>
