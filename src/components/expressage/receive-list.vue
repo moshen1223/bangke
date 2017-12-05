@@ -15,39 +15,26 @@
         <b>哇~是最新的</b>
     </div>
     <div class="status">
-        <div class="select-type">状态:{{selectState == 0 ? '全部' : selectState == 1 ? '未完成' : '已完成'}}</div>
+        <div class="select-type">状态:{{selectStateText}}</div>
         <div class="select-btn" v-show="maskShow">
-            <div><b>状态：</b><span @click="selectStateMethod(0)"  :class="{'selected': selectState == 0}">全部</span><span @click="selectStateMethod(1)"  :class="{'selected': selectState == 1}">未完成</span><span @click="selectStateMethod(2)" :class="{'selected': selectState == 2}">已完成</span></div>
+            <div>
+                <b>状态：</b>
+                <span @click="selectStateMethod(0)"  :class="{'selected': selectState == 0}">全部</span>
+                <span @click="selectStateMethod(1)"  :class="{'selected': selectState == 1}">已申请</span>
+                <span @click="selectStateMethod(2)" :class="{'selected': selectState == 2}">已揽货</span>
+                <span @click="selectStateMethod(3)"  :class="{'selected': selectState == 3}">配送中</span>
+                <span @click="selectStateMethod(4)" :class="{'selected': selectState == 4}">已收到并付款</span>
+                <span @click="selectStateMethod(5)"  :class="{'selected': selectState == 5}">已收款并完成</span>
+                <span @click="selectStateMethod(6)" :class="{'selected': selectState == 6}">已退回</span>
+            </div>
         </div>
     </div>
     <div class="list">
         <ul>
-            <li @click="selectItem(1)">
+            <li @click="selectItem(1)" v-for="(item, index) in receiveList" :key="index">
                 <div class="left">
                     <div >
-                        <!--<img src="">-->
-                    </div>
-                </div>
-                <div class="right">
-                    <h5>圣宝兰青春版美白补水套装精华液，寻找帮忙收快递的服务,寻找帮忙收快递的服务</h5>
-                    <p>补充: 河南师范大学西校区中一楼后中通快递</p>
-                    <div class="pay"><span>服务费 ￥ 3.00</span></div>
-                    <div class="more">
-                        <span></span>
-                        <ol>
-                            <li>&nbsp;确认完成</li>
-                            <li>&nbsp;&nbsp;&nbsp;&nbsp;删除</li>
-                        </ol>
-                    </div>
-                    <div class="time">
-                        <span>刚刚</span>
-                    </div>
-                </div>
-            </li>
-            <li @click="selectItem(2)">
-                <div class="left">
-                    <div >
-                        <!--<img src="">-->
+                        <img :src="item.userHeadUrl" v-if="item.userHeadUrl">
                     </div>
                 </div>
                 <div class="right">
@@ -90,7 +77,8 @@ export default{
             receiveList: [],
             selectState: 0,
             receiveType: 1,
-            page: 1
+            page: 1,
+            selectStateText: '全部'
         }
     },
     computed: {
@@ -99,7 +87,7 @@ export default{
         }
     },
     mounted(){
-        
+        this.myReceiveList(this.selectState, 1);
     },
     methods: {
         // 选择类型
@@ -113,6 +101,34 @@ export default{
         // 选择状态
         selectStateMethod(state){
             this.selectState = state;
+            this.maskShow = false;
+            this.myReceiveList(this.selectState, 1);
+            switch(this.selectState){
+                case 0 :
+                    this.selectStateText = '全部';
+                    break;
+                case 1 :
+                    this.selectStateText = '已申请';
+                    break;
+                case 2 :
+                    this.selectStateText = '已揽货';
+                    break;
+                case 3 :
+                    this.selectStateText = '配送中';
+                    break;
+                case 4 :
+                    this.selectStateText = '已收到并付款';
+                    break;
+                case 5 :
+                    this.selectStateText = '已收款并完成';
+                    break;
+                case 6 :
+                    this.selectStateText = '已退回';
+                    break;
+                default :
+                    this.selectStateText = '全部';
+                    return;
+            }
         },
         // 选择列表类型
         showSlect(type){
@@ -278,6 +294,9 @@ export default{
                         width: 75px
                         height: 75px
                         background: #fc5558
+                        img 
+                            width: 100%
+                            height: 100%
                 .right
                     flex: 1
                     position: relative
