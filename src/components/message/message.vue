@@ -2,17 +2,17 @@
 <div class="receive-list">
     <div class="list">
         <ul>
-            <li @click="selectItem(item.id)" v-for="(item, index) in receiveList" :key="index">
+            <li v-for="(item, index) in messageList" :key="index">
                 <div class="left">
                     <div >
                         <img :src="item.userHeadUrl" v-if="item.userHeadUrl">
                     </div>
                 </div>
                 <div class="right">
-                    <h5>圣宝兰青春版美白补水套装精华液，寻找帮忙收快递的服务,寻找帮忙收快递的服务</h5>
-                    <p>补充: 河南师范大学西校区中一楼后中通快递</p>
+                    <h5>{{item.title}}</h5>
+                    <p>{{item.content}}</p>
                     <div class="time">
-                        <span>刚刚</span>
+                        <span>{{item.createTime}}</span>
                     </div>
                 </div>
             </li>
@@ -40,13 +40,13 @@ export default{
         }
     },
     mounted(){
-        this.getMessageList(this.selectState, 1);
+        this.getMessageList();
     },
     methods: {
         // 获取我收的快递列表
-        getMessageList(state, page){
+        getMessageList(){
             this.$http({
-                url: API.Interface.myReceiveList(state, page),
+                url: API.Interface.getunreadList(),
                 method: 'get',
                 headers: {
                     'timestamp':  API.timeStr,

@@ -85,6 +85,12 @@ const CommingSoon =  (resolve) => {
   })
 }
 
+const UnReadMessage = (resolve) => {
+  import('components/message/message').then((module) => {
+    resolve(module)
+  })
+}
+
 export default new Router({
   routes: [{
       path: '/user',
@@ -137,6 +143,9 @@ export default new Router({
     },{
       path: '/comming-soon',
       component: CommingSoon,
+    },{
+      path: '/unread-message',
+      component: UnReadMessage
     }
   ]
 })

@@ -37,9 +37,9 @@
                 <router-link tag="li" to="/address-manage">
                     <img src="./address.png"><span>收货地址管理</span><i class="arrow"></i>
                 </router-link>
-                <li>
-                    <img src="./msg.png"><span>消息</span><i class="arrow"></i>
-                </li>
+                <router-link tag="li" to="/unread-message">
+                    <img src="./msg.png"><span>消息</span><b v-show="number>0">{{number}}</b><i class="arrow"></i>
+                </router-link>
                 <router-link tag="li" to="/addUserInfo">
                     <img src="./set.png"><span>设置</span><i class="arrow"></i>
                 </router-link>
@@ -61,12 +61,16 @@
     </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import storage from 'good-storage';
+import API from 'api/api';
+import {mapGetters, mapMutations} from 'vuex';
+const querystring = require('querystring');
 
 export default{
     data(){
         return{
-            selectedPage: 2
+            selectedPage: 2,
+            number: 0
         }
     },
     computed:{
@@ -85,6 +89,23 @@ export default{
         // 选择当前页
         selectCurrentPage(page){
             this.selectedPage = page;
+        },
+        // 获取未读消息数量
+        getunReadMsg(){
+            this.$http({
+                url: API.Interface.getunreadCount(),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                } 
+            }).then((res)=>{
+                if(res.data.code == 200){
+                    this.number = res.data.data
+                }
+            }).catch((err)=>{
+                console.log(err)
+            });
         },
         ...mapMutations({
             setCompletepage : 'SET_COMPLETEPAGE'
@@ -184,6 +205,18 @@ export default{
                     font-size: 13px
                     color: #333
                     margin-left: 16px
+                b
+                    position: absolute
+                    right: 30px
+                    top: 50%
+                    height: 16px
+                    line-height: 16px
+                    margin-top: -10px
+                    padding: 2px 4px
+                    border-radius: 6px
+                    font-size: 10px
+                    background: #ff0000
+                    color: #fff
                 i
                     position: absolute
                     right: 21px
