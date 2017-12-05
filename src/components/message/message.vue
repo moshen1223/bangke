@@ -1,5 +1,5 @@
 <template>
-<div class="receive-list">
+<div class="message-list">
     <div class="list">
         <ul>
             <li v-for="(item, index) in messageList" :key="index">
