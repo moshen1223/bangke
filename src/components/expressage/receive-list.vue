@@ -149,7 +149,8 @@ export default{
         selectItem(id){
             this.$router.push({
                 path: `/receive-list/${id}`
-            })
+            });
+            this.setReceiveId(id);
         },
         // 获取我收的快递列表
         myReceiveList(state, page){
@@ -167,7 +168,10 @@ export default{
             }).catch((error) => {
                 console.log(error)
             })
-        }
+        },
+        ...mapMutations({
+           setReceiveId: 'SET_RECEIVEID'
+        })
     },
     watch: {
 
@@ -253,7 +257,6 @@ export default{
         .select-btn
             background: #f2eeed
             div
-                height: 36px
                 line-height: 36px
                 font-size: 0
                 b

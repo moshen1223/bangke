@@ -107,7 +107,50 @@
     </div>
 </template>
 <script>
+import storage from 'good-storage';
+import API from 'api/api';
+import {mapGetters} from 'vuex';
 
+const querystring = require('querystring');
+
+export default{
+    data(){
+        return {
+            receiveDetail: {}
+        }
+    },
+    computed: {
+        login_info(){
+            return storage.session.get('login_info')
+        },
+        ...mapGetters(['receiveId'])
+    },
+    mounted(){
+        this.getReceiveDetail();
+    },
+    methods: {
+        // 获取我收的快递列表
+        getReceiveDetail(){
+            this.$http({
+                url: API.Interface.receiveDetail(this.receiveId),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.receiveDetail = res.data.data;
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+    },
+    watch: {
+
+    }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 .receive-detail
