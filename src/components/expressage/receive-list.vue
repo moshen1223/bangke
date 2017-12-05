@@ -31,7 +31,7 @@
     </div>
     <div class="list">
         <ul>
-            <li @click="selectItem(1)" v-for="(item, index) in receiveList" :key="index">
+            <li @click="selectItem(item.id)" v-for="(item, index) in receiveList" :key="index">
                 <div class="left">
                     <div >
                         <img :src="item.userHeadUrl" v-if="item.userHeadUrl">
@@ -147,10 +147,10 @@ export default{
         },
         // 选择查看详情
         selectItem(id){
+            this.setReceiveId(id);
             this.$router.push({
                 path: `/receive-list/${id}`
             });
-            this.setReceiveId(id);
         },
         // 获取我收的快递列表
         myReceiveList(state, page){
