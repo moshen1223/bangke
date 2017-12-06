@@ -84,6 +84,7 @@ export default{
                 this.setCompletepage(false);
             }
         }
+        this.getunReadMsg();
     },
     methods:{
         // 选择当前页

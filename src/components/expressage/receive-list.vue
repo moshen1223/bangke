@@ -34,13 +34,13 @@
             <li @click="selectItem(item.id)" v-for="(item, index) in receiveList" :key="index">
                 <div class="left">
                     <div >
-                        <img :src="item.userHeadUrl" v-if="item.userHeadUrl">
+                        <img :src="item.pictureUrl" v-if="item.pictureUrl">
                     </div>
                 </div>
                 <div class="right">
-                    <h5>圣宝兰青春版美白补水套装精华液，寻找帮忙收快递的服务,寻找帮忙收快递的服务</h5>
-                    <p>补充: 河南师范大学西校区中一楼后中通快递</p>
-                    <div class="pay"><span>服务费 ￥ 3.00</span></div>
+                    <h5>{{item.goodsList}}</h5>
+                    <p>{{item.logistics}}</p>
+                    <div class="pay"><span>{{item.chargesText}}</span></div>
                     <div class="more">
                         <span></span>
                         <ol>
@@ -49,7 +49,7 @@
                         </ol>
                     </div>
                     <div class="time">
-                        <span>刚刚</span>
+                        <span>{{item.createTime}}</span>
                     </div>
                 </div>
             </li>

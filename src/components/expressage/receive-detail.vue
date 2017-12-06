@@ -6,13 +6,13 @@
         <div class="content">
             <div class="goods">
                 <div class="pic">
-                    <div></div>
+                    <div><img :src="receiveDetail.pictureUrl" v-if="receiveDetail.pictureUrl"></div>
                 </div>
                 <div class="detail">
-                    <div class="disc">圣宝兰青春版美白补水套装精华液，寻找帮忙收快递的服务</div>
-                    <div class="pay"><span>服务费 ￥ 3.00</span></div>
+                    <div class="disc">{{receiveDetail.goodsList}}</div>
+                    <div class="pay"><span>{{receiveDetail.chargesText}}</span></div>
                     <div class="time">
-                        <span>刚刚</span>
+                        <span>{{receiveDetail.createTime}}</span>
                     </div>
                 </div>
             </div>
@@ -210,6 +210,9 @@ export default{
                     width: 75px
                     height: 90px
                     background: #fc5558
+                    img 
+                        width: 100%
+                        height: 100%
             .detail
                 flex: 1
                 position: relative
