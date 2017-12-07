@@ -267,7 +267,7 @@ export default{
                 span
                     display: inline-block
                     height: 16px
-                    width: 56px
+                    padding: 0 8px
                     text-align: center
                     line-height: 16px
                     margin-left: 24px
