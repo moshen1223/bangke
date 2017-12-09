@@ -116,7 +116,8 @@ const querystring = require('querystring');
 export default{
     data(){
         return {
-            receiveDetail: {}
+            receiveDetail: {},
+            recordList: []
         }
     },
     computed: {
@@ -141,6 +142,22 @@ export default{
             }).then((res) => {
                 if(res.data.code == 200){
                     this.receiveDetail = res.data.data;
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
+        // 获取配送列表
+        getReceiveRecordList(){
+            this.$http({
+                url: API.Interface.receiveRecordList(),
+                method: 'PUT',
+                data: querystring.stringify({
+                    '': this.receiveId
+                })
+            }).then((res) => {
+                if(res.data.code == 200){
+                    this.recordList = res.data.data;
                 }
             }).catch((error) => {
                 console.log(error)
