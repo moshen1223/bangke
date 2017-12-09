@@ -43,7 +43,7 @@
                     <div class="pay"><span>{{item.chargesText}}</span></div>
                     <div class="more">
                         <span @click.stop="handleConfirm(index)"></span>
-                        <ol :class="{'hide' : confirmIndex == index}">
+                        <ol :class="{'show' : confirmIndex == index}">
                             <li @click.stop="completeReceive(item.id)">&nbsp;确认完成</li>
                             <li>&nbsp;&nbsp;&nbsp;&nbsp;删除</li>
                         </ol>
@@ -375,6 +375,7 @@ export default{
                             background-size: 18px 5px
                         ol
                             width: 58px
+                            display: none
                             border-radius: 4px
                             margin-top: 4px
                             background: rgba(0, 0, 0, 0.5)
@@ -389,8 +390,8 @@ export default{
                                 border-bottom: 1px solid #e5e5e5
                                 &:last-child
                                     border-bottom: none
-                        .hide
-                            display: none
+                        .show
+                            display: block
                     .time
                         position: absolute
                         bottom: 2px

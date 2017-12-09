@@ -127,12 +127,14 @@ export default{
         ...mapGetters(['receiveId'])
     },
     mounted(){ 
+        this.getReceiveDetail(this.receiveId);
+        this.getReceiveRecordList(this.receiveId)
     },
     methods: {
         // 获取我收的快递列表
-        getReceiveDetail(){
+        getReceiveDetail(id){
             this.$http({
-                url: API.Interface.receiveDetail(this.receiveId),
+                url: API.Interface.receiveDetail(id),
                 method: 'get',
                 headers: {
                     'timestamp':  API.timeStr,
@@ -147,12 +149,12 @@ export default{
             })
         },
         // 获取配送列表
-        getReceiveRecordList(){
+        getReceiveRecordList(id){
             this.$http({
                 url: API.Interface.receiveRecordList(),
                 method: 'PUT',
                 data: querystring.stringify({
-                    '': this.receiveId
+                    '': id
                 })
             }).then((res) => {
                 if(res.data.code == 200){
@@ -164,12 +166,6 @@ export default{
         }
     },
     watch: {
-        receiveId(){
-            this.$nextTick(()=>{
-                this.getReceiveDetail();
-                this.getReceiveRecordList();
-            });
-        }
     }
 }
 </script>
