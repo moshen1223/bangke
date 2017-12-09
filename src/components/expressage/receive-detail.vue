@@ -173,6 +173,9 @@ export default{
         }
     },
     watch: {
+        receiveId(){
+            alert(3)
+        }
     }
 }
 </script>
