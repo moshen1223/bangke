@@ -74,6 +74,9 @@ export default{
         }
     },
     computed:{
+        login_info(){
+            return storage.session.get('login_info')
+        },
         ...mapGetters([
             'userInfo'
         ])

@@ -127,8 +127,10 @@ export default{
         ...mapGetters(['receiveId'])
     },
     mounted(){
-        this.getReceiveDetail();
-        this.getReceiveRecordList();
+        this.$nextTick(()=>{
+            this.getReceiveDetail();
+            this.getReceiveRecordList();
+        }); 
     },
     methods: {
         // 获取我收的快递列表

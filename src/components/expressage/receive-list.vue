@@ -42,7 +42,7 @@
                     <p>{{item.logistics}}</p>
                     <div class="pay"><span>{{item.chargesText}}</span></div>
                     <div class="more">
-                        <span @click="handleConfirm(index)"></span>
+                        <span @click.stop="handleConfirm(index)"></span>
                         <ol :class="{'hide' : confirmIndex == index}">
                             <li @click="completeReceive(item.id)">&nbsp;确认完成</li>
                             <li>&nbsp;&nbsp;&nbsp;&nbsp;删除</li>
