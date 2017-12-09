@@ -128,6 +128,7 @@ export default{
     },
     mounted(){
         this.getReceiveDetail();
+        this.getReceiveRecordList();
     },
     methods: {
         // 获取我收的快递列表

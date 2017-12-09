@@ -151,7 +151,6 @@ export default{
                             label: item.title
                         })
                     })
-                    console.log(this.options)
                 }
             }).catch((error) => {
                 console.log(error);

@@ -42,9 +42,9 @@
                     <p>{{item.logistics}}</p>
                     <div class="pay"><span>{{item.chargesText}}</span></div>
                     <div class="more">
-                        <span></span>
-                        <ol>
-                            <li>&nbsp;确认完成</li>
+                        <span @click="handleConfirm(index)"></span>
+                        <ol :class="{'hide' : confirmIndex == index}">
+                            <li @click="completeReceive(item.id)">&nbsp;确认完成</li>
                             <li>&nbsp;&nbsp;&nbsp;&nbsp;删除</li>
                         </ol>
                     </div>
@@ -78,7 +78,8 @@ export default{
             selectState: 0,
             receiveType: 1,
             page: 1,
-            selectStateText: '全部'
+            selectStateText: '全部',
+            confirmIndex: ''
         }
     },
     computed: {
@@ -90,6 +91,31 @@ export default{
         this.myReceiveList(this.selectState, 1);
     },
     methods: {
+        // 操作更多
+        handleConfirm(index){
+            confirmIndex = index;
+        },
+        // 完成操作
+        completeReceive(id){
+            this.$http({
+                url: API.Interface.receiveSetReceivePaid(),
+                method: 'PUT',
+                data: querystring.stringify({
+                    '' : id
+                }),
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
+            }).then((res) => {
+                if(res.data.code == 200){
+                    console.log(res.data);
+                    this.confirmIndex = '';
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
         // 选择类型
         selectReceiveType(type){
             if(type == this.receiveType){
@@ -344,7 +370,6 @@ export default{
                             background: url('./more.png') no-repeat
                             background-size: 18px 5px
                         ol
-                            display: none
                             width: 58px
                             border-radius: 4px
                             margin-top: 4px
@@ -360,9 +385,11 @@ export default{
                                 border-bottom: 1px solid #e5e5e5
                                 &:last-child
                                     border-bottom: none
+                        .hide
+                            display: none
                     .time
                         position: absolute
-                        bottom: 4px
+                        bottom: 2px
                         right: 0
                         span
                             font-size: 12px
