@@ -177,10 +177,10 @@ export default{
                 this.confirmIndex = -1;
                 return
             }
-            this.setReceiveId(id);
             this.$router.push({
                 path: `/receive-list/${id}`
             });
+            this.setReceiveId(id);
         },
         // 获取我收的快递列表
         myReceiveList(state, page){
