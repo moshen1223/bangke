@@ -127,15 +127,8 @@ export default{
         ...mapGetters(['receiveId'])
     },
     mounted(){ 
-        alert(1)
-        console.log(this.receiveId)
-        setTimeout(()=>{
-            this.$nextTick(()=>{
-                alert(2)
-                this.getReceiveDetail(this.receiveId);
-                this.getReceiveRecordList(this.receiveId)
-            })
-        },500)
+        this.getReceiveDetail(this.receiveId);
+        this.getReceiveRecordList(this.receiveId)
     },
     methods: {
         // 获取我收的快递列表
