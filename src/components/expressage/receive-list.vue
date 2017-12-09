@@ -44,7 +44,7 @@
                     <div class="more">
                         <span @click.stop="handleConfirm(index)"></span>
                         <ol :class="{'hide' : confirmIndex == index}">
-                            <li @click="completeReceive(item.id)">&nbsp;确认完成</li>
+                            <li @click.stop="completeReceive(item.id)">&nbsp;确认完成</li>
                             <li>&nbsp;&nbsp;&nbsp;&nbsp;删除</li>
                         </ol>
                     </div>
@@ -79,7 +79,7 @@ export default{
             receiveType: 1,
             page: 1,
             selectStateText: '全部',
-            confirmIndex: ''
+            confirmIndex: -1
         }
     },
     computed: {
@@ -93,7 +93,7 @@ export default{
     methods: {
         // 操作更多
         handleConfirm(index){
-            confirmIndex = index;
+            this.confirmIndex = index;
         },
         // 完成操作
         completeReceive(id){
@@ -173,6 +173,10 @@ export default{
         },
         // 选择查看详情
         selectItem(id){
+            if(this.confirmIndex > -1){
+                this.confirmIndex = -1;
+                return
+            }
             this.setReceiveId(id);
             this.$router.push({
                 path: `/receive-list/${id}`
@@ -373,7 +377,7 @@ export default{
                             width: 58px
                             border-radius: 4px
                             margin-top: 4px
-                            background: #fff
+                            background: rgba(0, 0, 0, 0.5)
                             text-align:center
                             li
                                 height: 33px
@@ -381,7 +385,7 @@ export default{
                                 padding: 0
                                 width: 100%
                                 font-size: 10px
-                                color: #333
+                                color: #fff
                                 border-bottom: 1px solid #e5e5e5
                                 &:last-child
                                     border-bottom: none
