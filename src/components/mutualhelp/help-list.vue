@@ -18,26 +18,30 @@
         </div>
     </div>
     <div class="list">
-        <ul>
-            <li v-for="(item,index) in helpList" :key="index" @click="selectItem(item.id)">
-                <div class="left">
-                    <div>
-                        <img v-if="item.pictureUr" :src="item.pictureUrl">
+         <mt-loadmore :bottom-method="loadBottom">
+            <ul>
+                <li v-for="(item,index) in helpList" :key="index" @click="selectItem(item.id)">
+                    <div class="left">
+                        <div>
+                            <img v-if="item.pictureUr" :src="item.pictureUrl">
+                        </div>
                     </div>
-                </div>
-                <div class="right">
-                    <h5 v-text="item.title"></h5>
-                    <p>奖励内容: {{item.reward}}</p>
-                    <div class="pay"><span>{{item.rewardRemark}}</span></div>
-                    <div class="participation">
-                        <span>参与人数 {{item.commnetCount}}</span>
+                    <div class="right">
+                        <h5 v-text="item.title"></h5>
+                        <p>奖励内容: {{item.reward}}</p>
+                        <div class="pay"><span>{{item.rewardRemark}}</span></div>
+                        <div class="participation">
+                            <span>参与人数 {{item.commnetCount}}</span>
+                        </div>
                     </div>
+                </li>
+            </ul>
+            <div slot="bottom" class="mint-loadmore-top">
+                <div class="no-more">
+                    <div><span>暂无更多内容</span></div>
                 </div>
-            </li>
-        </ul>
-    </div>
-    <div class="no-more">
-        <div><span>暂无更多内容</span></div>
+            </div>
+        </mt-loadmore>
     </div>
     <div class="space"></div>
     <router-link tag="div"  class="commit" to="/publish-help">
@@ -73,6 +77,10 @@ export default{
         this.getmyschoolMutualList(this.selectState,this.selectType,this.page)
     },
     methods: {
+        // 加载更多
+        loadBottom(){
+            console.log(this.page += 1)
+        },
         // 选择互助范围
         selectHelpRange(type){
             if(type == this.helpRange){
