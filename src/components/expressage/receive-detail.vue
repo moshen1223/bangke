@@ -151,11 +151,12 @@ export default{
         // 获取配送列表
         getReceiveRecordList(id){
             this.$http({
-                url: API.Interface.receiveRecordList(),
-                method: 'PUT',
-                data: querystring.stringify({
-                    '': id
-                })
+                url: API.Interface.receiveRecordList(id),
+                method: 'get',
+                headers: {
+                    'timestamp':  API.timeStr,
+                    'access_token': this.login_info.access_token
+                }
             }).then((res) => {
                 if(res.data.code == 200){
                     this.recordList = res.data.data;
