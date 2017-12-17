@@ -79,7 +79,7 @@ export default{
     methods: {
         // 加载更多
         loadBottom(){
-            console.log(this.page += 1)
+            alert(this.page += 1)
         },
         // 选择互助范围
         selectHelpRange(type){
@@ -316,24 +316,27 @@ export default{
                         span
                             font-size: 12px
                             color: #87807f
-    .no-more
-        padding: 0 10px
-        margin-top: 30px
-        div
-            border-top: 1px solid #87807f
-            position: relative
-            span
-                position: absolute
-                background: #f1eeed
-                font-size: 12px
-                color: #87807f    
-                padding: 0 14px
-                left: 50%
-                top: -7px
-                -webkit-transform: translateX(-50%)
-                -moz-transform: translateX(-50%)
-                -o-transform: translateX(-50%)
-                transform: translateX(-50%)
+        .mint-loadmore-top
+            margin-top: none 
+            height: 25px
+            .no-more
+                padding: 0 10px
+                margin-top: 15px
+                div
+                    border-top: 1px solid #87807f
+                    position: relative
+                    span
+                        position: absolute
+                        background: #f1eeed
+                        font-size: 12px
+                        color: #87807f    
+                        padding: 0 14px
+                        left: 50%
+                        top: -7px
+                        -webkit-transform: translateX(-50%)
+                        -moz-transform: translateX(-50%)
+                        -o-transform: translateX(-50%)
+                        transform: translateX(-50%)
     .space
         height: 54px
     .commit
