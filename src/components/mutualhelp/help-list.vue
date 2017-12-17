@@ -1,5 +1,5 @@
 <template>
-<div class="help-list">
+<div class="help-list" ref="helpList">
     <div class="help-type">
         <div :class="{'active' : helpRange == 1}" @click="selectHelpRange(1)">
             <span>本校互助</span>
