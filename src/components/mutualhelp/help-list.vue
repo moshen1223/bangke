@@ -1,5 +1,5 @@
 <template>
-<div class="help-list" ref="helpList">
+<div class="help-list">
     <div class="help-type">
         <div :class="{'active' : helpRange == 1}" @click="selectHelpRange(1)">
             <span>本校互助</span>
@@ -18,30 +18,26 @@
         </div>
     </div>
     <div class="list">
-         <mt-loadmore :bottom-method="loadBottom">
-            <ul>
-                <li v-for="(item,index) in helpList" :key="index" @click="selectItem(item.id)">
-                    <div class="left">
-                        <div>
-                            <img v-if="item.pictureUr" :src="item.pictureUrl">
-                        </div>
+        <ul>
+            <li v-for="(item,index) in helpList" :key="index" @click="selectItem(item.id)">
+                <div class="left">
+                    <div>
+                        <img v-if="item.pictureUr" :src="item.pictureUrl">
                     </div>
-                    <div class="right">
-                        <h5 v-text="item.title"></h5>
-                        <p>奖励内容: {{item.reward}}</p>
-                        <div class="pay"><span>{{item.rewardRemark}}</span></div>
-                        <div class="participation">
-                            <span>参与人数 {{item.commnetCount}}</span>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <div slot="bottom" class="mint-loadmore-top">
-                <div class="no-more">
-                    <div><span>暂无更多内容</span></div>
                 </div>
-            </div>
-        </mt-loadmore>
+                <div class="right">
+                    <h5 v-text="item.title"></h5>
+                    <p>奖励内容: {{item.reward}}</p>
+                    <div class="pay"><span>{{item.rewardRemark}}</span></div>
+                    <div class="participation">
+                        <span>参与人数 {{item.commnetCount}}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="no-more">
+        <div><span>暂无更多内容</span></div>
     </div>
     <div class="space"></div>
     <router-link tag="div"  class="commit" to="/publish-help">
@@ -77,10 +73,6 @@ export default{
         this.getmyschoolMutualList(this.selectState,this.selectType,this.page)
     },
     methods: {
-        // 加载更多
-        loadBottom(){
-            alert(this.page += 1)
-        },
         // 选择互助范围
         selectHelpRange(type){
             if(type == this.helpRange){
@@ -316,27 +308,24 @@ export default{
                         span
                             font-size: 12px
                             color: #87807f
-        .mint-loadmore-top
-            margin-top: none 
-            height: 25px
-            .no-more
-                padding: 0 10px
-                margin-top: 15px
-                div
-                    border-top: 1px solid #87807f
-                    position: relative
-                    span
-                        position: absolute
-                        background: #f1eeed
-                        font-size: 12px
-                        color: #87807f    
-                        padding: 0 14px
-                        left: 50%
-                        top: -7px
-                        -webkit-transform: translateX(-50%)
-                        -moz-transform: translateX(-50%)
-                        -o-transform: translateX(-50%)
-                        transform: translateX(-50%)
+    .no-more
+        padding: 0 10px
+        margin-top: 30px
+        div
+            border-top: 1px solid #87807f
+            position: relative
+            span
+                position: absolute
+                background: #f1eeed
+                font-size: 12px
+                color: #87807f    
+                padding: 0 14px
+                left: 50%
+                top: -7px
+                -webkit-transform: translateX(-50%)
+                -moz-transform: translateX(-50%)
+                -o-transform: translateX(-50%)
+                transform: translateX(-50%)
     .space
         height: 54px
     .commit
