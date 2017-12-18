@@ -327,7 +327,7 @@ export default{
                 -o-transform: translateX(-50%)
                 transform: translateX(-50%)
     .space
-        height: 54px
+        height: 64px
     .commit
         width: 100%
         height: 49px
